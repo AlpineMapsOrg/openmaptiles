@@ -171,6 +171,20 @@ endif
 # Consult .env if needed
 MIN_ZOOM := $(or $(MIN_ZOOM),$(shell (. .env; echo $${MIN_ZOOM})),0)
 MAX_ZOOM := $(or $(MAX_ZOOM),$(shell (. .env; echo $${MAX_ZOOM})),7)
+EXTENT := $(or $(EXTENT),$(shell (. .env; echo $${EXTENT})),4096)
+
+
+ifeq ($(shell (. .env; echo $${TILE_GZIP})),OFF)
+  # gzip was disabled
+	TILE_GZIP := ""
+else 
+  # gzip is set to a number -> use the number
+  TILE_GZIP := "--gzip" $(shell (. .env; echo $${TILE_GZIP}))
+
+endif
+
+
+
 PPORT := $(or $(PPORT),$(shell (. .env; echo $${PPORT})),7)
 TPORT := $(or $(TPORT),$(shell (. .env; echo $${TPORT})),7)
 
@@ -289,7 +303,8 @@ ifeq (,$(wildcard build/sql/run_last.sql))
 	$(DOCKER_COMPOSE) run $(DC_OPTS) openmaptiles-tools bash -c \
 		'generate-sql $(TILESET_FILE) --dir ./build/sql \
 		&& generate-sqltomvt $(TILESET_FILE) \
-							 --key --gzip --postgis-ver 3.3.4 \
+							 --key $(TILE_GZIP) --postgis-ver 3.3.4 \
+							 --extent=$(EXTENT) \
 							 --function --fname=getmvt >> ./build/sql/run_last.sql'
 endif
 
