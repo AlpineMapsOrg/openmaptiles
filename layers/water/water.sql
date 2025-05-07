@@ -252,6 +252,12 @@ DROP MATERIALIZED VIEW IF EXISTS water_z9;
 DROP MATERIALIZED VIEW IF EXISTS water_z10;
 DROP MATERIALIZED VIEW IF EXISTS water_z11;
 DROP MATERIALIZED VIEW IF EXISTS water_z12;
+DROP MATERIALIZED VIEW IF EXISTS water_z13;
+DROP MATERIALIZED VIEW IF EXISTS water_z14;
+DROP MATERIALIZED VIEW IF EXISTS water_z15;
+DROP MATERIALIZED VIEW IF EXISTS water_z16;
+DROP MATERIALIZED VIEW IF EXISTS water_z17;
+DROP MATERIALIZED VIEW IF EXISTS water_z18;
 
 CREATE OR REPLACE VIEW water_z0 AS
 (
@@ -527,9 +533,146 @@ SELECT NULL::integer AS id,
        NULL::boolean AS is_intermittent,
        NULL::boolean AS is_bridge,
        NULL::boolean AS is_tunnel
-FROM osm_ocean_polygon_union
+FROM osm_ocean_polygon_gen_z12
 UNION ALL
 -- etldoc:  osm_water_polygon ->  water_z12
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z12
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z12 USING gist(geometry);
+
+
+
+
+
+CREATE MATERIALIZED VIEW water_z13 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_gen_z13
+UNION ALL
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z13
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z13 USING gist(geometry);
+
+
+CREATE MATERIALIZED VIEW water_z14 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_gen_z14
+UNION ALL
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z14
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z14 USING gist(geometry);
+
+
+CREATE MATERIALIZED VIEW water_z15 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_gen_z15
+UNION ALL
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z15
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z15 USING gist(geometry);
+
+
+CREATE MATERIALIZED VIEW water_z16 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_gen_z16
+UNION ALL
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z16
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z16 USING gist(geometry);
+
+
+CREATE MATERIALIZED VIEW water_z17 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_gen_z17
+UNION ALL
+SELECT osm_id AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       water_class(waterway, water, leisure) AS class,
+       is_intermittent,
+       is_bridge,
+       is_tunnel
+FROM osm_water_polygon_gen_z17
+WHERE "natural" != 'bay'
+    );
+CREATE INDEX ON water_z17 USING gist(geometry);
+
+
+
+
+CREATE MATERIALIZED VIEW water_z18 AS
+(
+SELECT NULL::integer AS id,
+       (ST_Dump(geometry)).geom AS geometry,
+       'ocean'::text AS class,
+       NULL::boolean AS is_intermittent,
+       NULL::boolean AS is_bridge,
+       NULL::boolean AS is_tunnel
+FROM osm_ocean_polygon_union
+UNION ALL
 SELECT osm_id AS id,
        (ST_Dump(geometry)).geom AS geometry,
        water_class(waterway, water, leisure) AS class,
@@ -539,7 +682,12 @@ SELECT osm_id AS id,
 FROM osm_water_polygon
 WHERE "natural" != 'bay'
     );
-CREATE INDEX ON water_z12 USING gist(geometry);
+CREATE INDEX ON water_z18 USING gist(geometry);
+
+
+
+
+
 
 -- etldoc: layer_water [shape=record fillcolor=lightpink, style="rounded,filled",
 -- etldoc:     label="layer_water |<z0> z0|<z1>z1|<z2>z2|<z3>z3 |<z4> z4|<z5>z5|<z6>z6|<z7>z7| <z8> z8 |<z9> z9 |<z10> z10 |<z11> z11 |<z12> z12+" ] ;
@@ -621,10 +769,35 @@ FROM (
          FROM water_z11
          WHERE zoom_level = 11
          UNION ALL
-         -- etldoc: water_z12 ->  layer_water:z12
+
          SELECT *
          FROM water_z12
-         WHERE zoom_level >= 12
+         WHERE zoom_level = 12
+         UNION ALL
+         SELECT *
+         FROM water_z13
+         WHERE zoom_level = 13
+         UNION ALL
+         SELECT *
+         FROM water_z14
+         WHERE zoom_level = 14
+         UNION ALL
+         SELECT *
+         FROM water_z15
+         WHERE zoom_level = 15
+         UNION ALL
+         SELECT *
+         FROM water_z16
+         WHERE zoom_level = 16
+         UNION ALL
+         SELECT *
+         FROM water_z17
+         WHERE zoom_level = 17
+         UNION ALL
+
+         SELECT *
+         FROM water_z18
+         WHERE zoom_level >= 18
      ) AS zoom_levels
 WHERE geometry && bbox;
 $$ LANGUAGE SQL STABLE

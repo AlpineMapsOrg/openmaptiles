@@ -3,37 +3,62 @@ generalized_tables:
   water_polygon_gen_z6:
     source: water_polygon_gen_z7
     sql_filter: area>power(ZRES5,2)
-    tolerance: ZRES7
+    tolerance: ZRES6
 
   # etldoc: osm_water_polygon_gen_z8 -> osm_water_polygon_gen_z7
   water_polygon_gen_z7:
     source: water_polygon_gen_z8
     sql_filter: area>power(ZRES6,2)
-    tolerance: ZRES8
+    tolerance: ZRES7
 
   # etldoc: osm_water_polygon_gen_z9 -> osm_water_polygon_gen_z8
   water_polygon_gen_z8:
     source: water_polygon_gen_z9
     sql_filter: area>power(ZRES7,2)
-    tolerance: ZRES9
+    tolerance: ZRES8
 
   # etldoc: osm_water_polygon_gen_z10 -> osm_water_polygon_gen_z9
   water_polygon_gen_z9:
     source: water_polygon_gen_z10
     sql_filter: area>power(ZRES8,2)
-    tolerance: ZRES10
+    tolerance: ZRES9
 
   # etldoc: osm_water_polygon_gen_z11 -> osm_water_polygon_gen_z10
   water_polygon_gen_z10:
     source: water_polygon_gen_z11
     sql_filter: area>power(ZRES9,2)
-    tolerance: ZRES11
+    tolerance: ZRES10
 
   # etldoc: osm_water_polygon -> osm_water_polygon_gen_z11
   water_polygon_gen_z11:
-    source: water_polygon
+    source: water_polygon_gen_z12
     sql_filter: area>power(ZRES10,2)
+    tolerance: ZRES11
+
+  water_polygon_gen_z12:
+    source: water_polygon_gen_z13
+    sql_filter: area>power(ZRES11,2)
     tolerance: ZRES12
+  water_polygon_gen_z13:
+    source: water_polygon_gen_z14
+    sql_filter: area>power(ZRES12,2)
+    tolerance: ZRES13
+  water_polygon_gen_z14:
+    source: water_polygon_gen_z15
+    sql_filter: area>power(ZRES13,2)
+    tolerance: ZRES14
+  water_polygon_gen_z15:
+    source: water_polygon_gen_z16
+    sql_filter: area>power(ZRES14,2)
+    tolerance: ZRES15
+  water_polygon_gen_z16:
+    source: water_polygon_gen_z17
+    sql_filter: area>power(ZRES15,2)
+    tolerance: ZRES16
+  water_polygon_gen_z17:
+    source: water_polygon
+    sql_filter: area>power(ZRES16,2)
+    tolerance: ZRES17
 
 tunnel_field: &tunnel
   key: tunnel

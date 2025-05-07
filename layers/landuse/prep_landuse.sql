@@ -1,3 +1,126 @@
+DROP TABLE IF EXISTS cluster_zres18;
+CREATE TABLE cluster_zres18 AS 
+(
+WITH single_geom AS (
+        SELECT (ST_Dump(geometry)).geom AS geometry
+        FROM osm_landuse_polygon 
+        WHERE landuse='residential'
+    )
+    SELECT ST_ClusterDBSCAN(geometry, eps := zres(18), minpoints := 1) over () AS cid,
+           geometry
+    FROM single_geom
+);
+CREATE INDEX ON cluster_zres18 USING gist(geometry);
+
+DROP TABLE IF EXISTS cluster_zres18_union;
+CREATE TABLE cluster_zres18_union AS (
+SELECT ST_Buffer(
+            ST_Union(
+                ST_Buffer(
+                    ST_SnapToGrid(geometry, 0.01)
+                    , zres(18), 'join=mitre'
+                )
+            ),-zres(18), 'join=mitre'
+        ) AS geometry
+FROM cluster_zres18
+GROUP BY cid
+);
+CREATE INDEX ON cluster_zres18_union USING gist(geometry);
+
+
+DROP TABLE IF EXISTS cluster_zres17;
+CREATE TABLE cluster_zres17 AS 
+(
+WITH single_geom AS (
+        SELECT (ST_Dump(geometry)).geom AS geometry
+        FROM osm_landuse_polygon 
+        WHERE landuse='residential'
+    )
+    SELECT ST_ClusterDBSCAN(geometry, eps := zres(17), minpoints := 1) over () AS cid,
+           geometry
+    FROM single_geom
+);
+CREATE INDEX ON cluster_zres17 USING gist(geometry);
+
+DROP TABLE IF EXISTS cluster_zres17_union;
+CREATE TABLE cluster_zres17_union AS (
+SELECT ST_Buffer(
+            ST_Union(
+                ST_Buffer(
+                    ST_SnapToGrid(geometry, 1)
+                    , zres(17), 'join=mitre'
+                )
+            ),-zres(17), 'join=mitre'
+        ) AS geometry
+FROM cluster_zres17
+GROUP BY cid
+);
+CREATE INDEX ON cluster_zres17_union USING gist(geometry);
+
+
+DROP TABLE IF EXISTS cluster_zres16;
+CREATE TABLE cluster_zres16 AS 
+(
+WITH single_geom AS (
+        SELECT (ST_Dump(geometry)).geom AS geometry
+        FROM osm_landuse_polygon 
+        WHERE landuse='residential'
+    )
+    SELECT ST_ClusterDBSCAN(geometry, eps := zres(16), minpoints := 1) over () AS cid,
+           geometry
+    FROM single_geom
+);
+CREATE INDEX ON cluster_zres16 USING gist(geometry);
+
+DROP TABLE IF EXISTS cluster_zres16_union;
+CREATE TABLE cluster_zres16_union AS (
+SELECT ST_Buffer(
+            ST_Union(
+                ST_Buffer(
+                    ST_SnapToGrid(geometry, 1)
+                    , zres(16), 'join=mitre'
+                )
+            ),-zres(16), 'join=mitre'
+        ) AS geometry
+FROM cluster_zres16
+GROUP BY cid
+);
+CREATE INDEX ON cluster_zres16_union USING gist(geometry);
+
+
+DROP TABLE IF EXISTS cluster_zres15;
+CREATE TABLE cluster_zres15 AS 
+(
+WITH single_geom AS (
+        SELECT (ST_Dump(geometry)).geom AS geometry
+        FROM osm_landuse_polygon 
+        WHERE landuse='residential'
+    )
+    SELECT ST_ClusterDBSCAN(geometry, eps := zres(15), minpoints := 1) over () AS cid,
+           geometry
+    FROM single_geom
+);
+CREATE INDEX ON cluster_zres15 USING gist(geometry);
+
+DROP TABLE IF EXISTS cluster_zres15_union;
+CREATE TABLE cluster_zres15_union AS (
+SELECT ST_Buffer(
+            ST_Union(
+                ST_Buffer(
+                    ST_SnapToGrid(geometry, 1)
+                    , zres(15), 'join=mitre'
+                )
+            ),-zres(15), 'join=mitre'
+        ) AS geometry
+FROM cluster_zres15
+GROUP BY cid
+);
+CREATE INDEX ON cluster_zres15_union USING gist(geometry);
+
+
+
+
+
 DROP TABLE IF EXISTS cluster_zres14;
 CREATE TABLE cluster_zres14 AS 
 (
@@ -18,7 +141,7 @@ CREATE TABLE cluster_zres14_union AS (
 SELECT ST_Buffer(
             ST_Union(
                 ST_Buffer(
-                    ST_SnapToGrid(geometry, 0.01)
+                    ST_SnapToGrid(geometry, 1)
                     , zres(14), 'join=mitre'
                 )
             ),-zres(14), 'join=mitre'
@@ -174,3 +297,49 @@ FROM cluster_zres14_union
 WHERE ST_Area(geometry) > power(zres(12), 2)
 );
 CREATE INDEX ON osm_residential_gen_z12 USING gist(geometry);
+
+
+DROP TABLE IF EXISTS osm_residential_gen_z13 CASCADE;
+CREATE TABLE osm_residential_gen_z13 AS
+(
+SELECT ST_SimplifyVW(geometry, power(zres(13), 2)) AS geometry
+FROM cluster_zres15_union
+WHERE ST_Area(geometry) > power(zres(13), 2)
+);
+CREATE INDEX ON osm_residential_gen_z12 USING gist(geometry);
+
+DROP TABLE IF EXISTS osm_residential_gen_z14 CASCADE;
+CREATE TABLE osm_residential_gen_z14 AS
+(
+SELECT ST_SimplifyVW(geometry, power(zres(14), 2)) AS geometry
+FROM cluster_zres16_union
+WHERE ST_Area(geometry) > power(zres(14), 2)
+);
+CREATE INDEX ON osm_residential_gen_z14 USING gist(geometry);
+
+DROP TABLE IF EXISTS osm_residential_gen_z15 CASCADE;
+CREATE TABLE osm_residential_gen_z15 AS
+(
+SELECT ST_SimplifyVW(geometry, power(zres(15), 2)) AS geometry
+FROM cluster_zres17_union
+WHERE ST_Area(geometry) > power(zres(15), 2)
+);
+CREATE INDEX ON osm_residential_gen_z15 USING gist(geometry);
+
+DROP TABLE IF EXISTS osm_residential_gen_z16 CASCADE;
+CREATE TABLE osm_residential_gen_z16 AS
+(
+SELECT ST_SimplifyVW(geometry, power(zres(16), 2)) AS geometry
+FROM cluster_zres18_union
+WHERE ST_Area(geometry) > power(zres(16), 2)
+);
+CREATE INDEX ON osm_residential_gen_z16 USING gist(geometry);
+
+DROP TABLE IF EXISTS osm_residential_gen_z17 CASCADE;
+CREATE TABLE osm_residential_gen_z17 AS
+(
+SELECT ST_SimplifyVW(geometry, power(zres(17), 2)) AS geometry
+FROM cluster_zres18_union
+WHERE ST_Area(geometry) > power(zres(17), 2)
+);
+CREATE INDEX ON osm_residential_gen_z17 USING gist(geometry);

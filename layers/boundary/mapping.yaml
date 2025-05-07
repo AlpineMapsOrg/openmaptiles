@@ -60,9 +60,26 @@ generalized_tables:
 
   # etldoc: osm_boundary_polygon -> osm_boundary_polygon_gen_z13
   boundary_polygon_gen_z13:
-    source: boundary_polygon
-    sql_filter: area>power(ZRES12,2) AND ST_IsValid(geometry)
+    source: boundary_polygon_gen_z14
+    sql_filter: area>power(ZRES12,2)
     tolerance: ZRES13
+
+  boundary_polygon_gen_z14:
+    source: boundary_polygon_gen_z15
+    sql_filter: area>power(ZRES13,2)
+    tolerance: ZRES14
+  boundary_polygon_gen_z15:
+    source: boundary_polygon_gen_z16
+    sql_filter: area>power(ZRES14,2)
+    tolerance: ZRES15
+  boundary_polygon_gen_z16:
+    source: boundary_polygon_gen_z17
+    sql_filter: area>power(ZRES15,2)
+    tolerance: ZRES16
+  boundary_polygon_gen_z17:
+    source: boundary_polygon
+    sql_filter: area>power(ZRES16,2) AND ST_IsValid(geometry)
+    tolerance: ZRES17
 
 
 tables:

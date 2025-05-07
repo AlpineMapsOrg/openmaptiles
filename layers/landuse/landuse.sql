@@ -217,6 +217,128 @@ CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z12_union AS
          FROM osm_residential_gen_z12
 );
 
+
+
+
+CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z13_union AS
+(
+       SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z13
+               WHERE landuse <> 'residential'
+       UNION ALL
+       SELECT NULL::bigint AS osm_id,
+              geometry,
+              'residential' AS landuse,
+              '' AS amenity,
+              '' AS leisure,
+              '' AS tourism,
+              '' AS place,
+              '' AS waterway
+         FROM osm_residential_gen_z13
+);
+CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z14_union AS
+(
+       SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z14
+               WHERE landuse <> 'residential'
+       UNION ALL
+       SELECT NULL::bigint AS osm_id,
+              geometry,
+              'residential' AS landuse,
+              '' AS amenity,
+              '' AS leisure,
+              '' AS tourism,
+              '' AS place,
+              '' AS waterway
+         FROM osm_residential_gen_z14
+);
+CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z15_union AS
+(
+       SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z15
+               WHERE landuse <> 'residential'
+       UNION ALL
+       SELECT NULL::bigint AS osm_id,
+              geometry,
+              'residential' AS landuse,
+              '' AS amenity,
+              '' AS leisure,
+              '' AS tourism,
+              '' AS place,
+              '' AS waterway
+         FROM osm_residential_gen_z15
+);
+CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z16_union AS
+(
+       SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z16
+               WHERE landuse <> 'residential'
+       UNION ALL
+       SELECT NULL::bigint AS osm_id,
+              geometry,
+              'residential' AS landuse,
+              '' AS amenity,
+              '' AS leisure,
+              '' AS tourism,
+              '' AS place,
+              '' AS waterway
+         FROM osm_residential_gen_z16
+);
+CREATE OR REPLACE VIEW osm_landuse_polygon_gen_z17_union AS
+(
+       SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z17
+               WHERE landuse <> 'residential'
+       UNION ALL
+       SELECT NULL::bigint AS osm_id,
+              geometry,
+              'residential' AS landuse,
+              '' AS amenity,
+              '' AS leisure,
+              '' AS tourism,
+              '' AS place,
+              '' AS waterway
+         FROM osm_residential_gen_z17
+);
+
+
+
+
 -- etldoc: layer_landuse[shape=record fillcolor=lightpink, style="rounded,filled",
 -- etldoc:     label="layer_landuse |<z4> z4|<z5> z5|<z6> z6|<z7> z7|<z8> z8|<z9> z9|<z10> z10|<z11> z11|<z12> z12|<z13> z13|<z14> z14+" ] ;
 
@@ -358,10 +480,56 @@ FROM (
                 tourism,
                 place,
                 waterway
-         FROM osm_landuse_polygon_gen_z13
+         FROM osm_landuse_polygon_gen_z13_union
          WHERE zoom_level = 13
          UNION ALL
-         -- etldoc: osm_landuse_polygon -> layer_landuse:z14
+
+
+         SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z14_union
+         WHERE zoom_level = 14
+         UNION ALL
+         SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z15_union
+         WHERE zoom_level = 15
+         UNION ALL
+         SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z16_union
+         WHERE zoom_level = 16
+         UNION ALL
+         SELECT osm_id,
+                geometry,
+                landuse,
+                amenity,
+                leisure,
+                tourism,
+                place,
+                waterway
+         FROM osm_landuse_polygon_gen_z17_union
+         WHERE zoom_level = 17
+         UNION ALL
+
          SELECT osm_id,
                 geometry,
                 landuse,
@@ -371,7 +539,7 @@ FROM (
                 place,
                 waterway
          FROM osm_landuse_polygon
-         WHERE zoom_level >= 14
+         WHERE zoom_level >= 17
      ) AS zoom_levels
 WHERE geometry && bbox;
 $$ LANGUAGE SQL STABLE

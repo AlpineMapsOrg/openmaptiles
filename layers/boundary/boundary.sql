@@ -621,6 +621,56 @@ SELECT geometry,
 FROM osm_border_linestring_gen_z13
     );
 
+CREATE OR REPLACE VIEW boundary_z14 AS
+(
+SELECT geometry,
+       admin_level,
+       adm0_l,
+       adm0_r,
+       disputed,
+       CASE WHEN disputed THEN edit_name(name) END AS disputed_name,
+       claimed_by,
+       maritime
+FROM osm_border_linestring_gen_z13
+    );
+CREATE OR REPLACE VIEW boundary_z15 AS
+(
+SELECT geometry,
+       admin_level,
+       adm0_l,
+       adm0_r,
+       disputed,
+       CASE WHEN disputed THEN edit_name(name) END AS disputed_name,
+       claimed_by,
+       maritime
+FROM osm_border_linestring_gen_z13
+    );
+CREATE OR REPLACE VIEW boundary_z16 AS
+(
+SELECT geometry,
+       admin_level,
+       adm0_l,
+       adm0_r,
+       disputed,
+       CASE WHEN disputed THEN edit_name(name) END AS disputed_name,
+       claimed_by,
+       maritime
+FROM osm_border_linestring_gen_z13
+    );
+CREATE OR REPLACE VIEW boundary_z17 AS
+(
+SELECT geometry,
+       admin_level,
+       adm0_l,
+       adm0_r,
+       disputed,
+       CASE WHEN disputed THEN edit_name(name) END AS disputed_name,
+       claimed_by,
+       maritime
+FROM osm_border_linestring_gen_z13
+    );
+
+
 -- etldoc: layer_boundary[shape=record fillcolor=lightpink, style="rounded,filled",
 -- etldoc:     label="<sql> layer_boundary |<z0> z0 |<z1> z1 |<z2> z2 | <z3> z3 | <z4> z4 | <z5> z5 | <z6> z6 | <z7> z7 | <z8> z8 | <z9> z9 |<z10> z10 |<z11> z11 |<z12> z12|<z13> z13|<z14> z14+"]
 CREATE OR REPLACE FUNCTION layer_boundary(bbox geometry, zoom_level int)
@@ -720,11 +770,31 @@ FROM (
          WHERE geometry && bbox
            AND zoom_level = 12
          UNION ALL
-         -- etldoc: boundary_z13 -> layer_boundary:z13
          SELECT *
          FROM boundary_z13
          WHERE geometry && bbox
-           AND zoom_level >= 13
+           AND zoom_level = 13
+         UNION ALL
+         SELECT *
+         FROM boundary_z14
+         WHERE geometry && bbox
+           AND zoom_level = 14
+         UNION ALL
+         SELECT *
+         FROM boundary_z15
+         WHERE geometry && bbox
+           AND zoom_level = 15
+         UNION ALL
+         SELECT *
+         FROM boundary_z16
+         WHERE geometry && bbox
+           AND zoom_level = 16
+         UNION ALL
+         -- etldoc: boundary_z13 -> layer_boundary:z13
+         SELECT *
+         FROM boundary_z17
+         WHERE geometry && bbox
+           AND zoom_level >= 17
      ) AS segment_zoom_levels
 
 UNION ALL
@@ -842,13 +912,49 @@ FROM (
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon -> layer_boundary:z14
+         SELECT geometry,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_boundary_polygon_gen_z14
+         WHERE zoom_level = 14
+         AND geometry && bbox
+
+         UNION ALL
+         SELECT geometry,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_boundary_polygon_gen_z15
+         WHERE zoom_level = 15
+         AND geometry && bbox
+
+         UNION ALL
+         SELECT geometry,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_boundary_polygon_gen_z16
+         WHERE zoom_level = 16
+         AND geometry && bbox
+
+         UNION ALL
+         SELECT geometry,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_boundary_polygon_gen_z17
+         WHERE zoom_level = 17
+         AND geometry && bbox
+
+         UNION ALL
+
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
          FROM osm_boundary_polygon
-         WHERE zoom_level = 14
+         WHERE zoom_level >= 18
          AND geometry && bbox
 
      ) AS area_zoom_levels

@@ -2,93 +2,169 @@ generalized_tables:
 # etldoc: osm_railway_linestring_gen_z9 -> osm_railway_linestring_gen_z8
   railway_linestring_gen_z8:
     source: railway_linestring_gen_z9
-    tolerance: ZRES9
+    tolerance: ZRES8
 
 # etldoc: osm_railway_linestring_gen_z10 -> osm_railway_linestring_gen_z9
   railway_linestring_gen_z9:
     source: railway_linestring_gen_z10
-    tolerance: ZRES10
+    tolerance: ZRES9
 
 # etldoc: osm_railway_linestring_gen_z11 -> osm_railway_linestring_gen_z10
   railway_linestring_gen_z10:
     source: railway_linestring_gen_z11
-    tolerance: ZRES11
+    tolerance: ZRES10
 
 # etldoc: osm_railway_linestring_gen_z12 -> osm_railway_linestring_gen_z11
   railway_linestring_gen_z11:
     source: railway_linestring_gen_z12
-    tolerance: ZRES12
+    tolerance: ZRES11
 
 # etldoc: osm_railway_linestring -> osm_railway_linestring_gen_z12
   railway_linestring_gen_z12:
+    source: railway_linestring_gen_z13
+    sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service=''
+    tolerance: ZRES12
+
+  railway_linestring_gen_z13:
+    source: railway_linestring_gen_z14
+    sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service=''
+    tolerance: ZRES13
+  railway_linestring_gen_z14:
+    source: railway_linestring_gen_z15
+    sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service=''
+    tolerance: ZRES14
+  railway_linestring_gen_z15:
+    source: railway_linestring_gen_z16
+    sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service=''
+    tolerance: ZRES15
+  railway_linestring_gen_z16:
+    source: railway_linestring_gen_z17
+    sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service=''
+    tolerance: ZRES16
+  railway_linestring_gen_z17:
     source: railway_linestring
     sql_filter: railway IN ('rail', 'narrow_gauge', 'light_rail') AND service='' AND ST_IsValid(geometry)
-    tolerance: ZRES13
+    tolerance: ZRES17
+
 
 # etldoc: osm_aerialway_linestring -> osm_aerialway_linestring_gen_z12
   aerialway_linestring_gen_z12:
+    source: aerialway_linestring_gen_z13
+    tolerance: ZRES12
+
+  aerialway_linestring_gen_z13:
+    source: aerialway_linestring_gen_z14
+    tolerance: ZRES13
+  aerialway_linestring_gen_z14:
+    source: aerialway_linestring_gen_z15
+    tolerance: ZRES14
+  aerialway_linestring_gen_z15:
+    source: aerialway_linestring_gen_z16
+    tolerance: ZRES15
+  aerialway_linestring_gen_z16:
+    source: aerialway_linestring_gen_z17
+    tolerance: ZRES16
+  aerialway_linestring_gen_z17:
     source: aerialway_linestring
     sql_filter: ST_IsValid(geometry)
-    tolerance: ZRES13
+    tolerance: ZRES17
 
 # etldoc: osm_shipway_linestring_gen_z5 -> osm_shipway_linestring_gen_z4
   shipway_linestring_gen_z4:
     source: shipway_linestring_gen_z5
     sql_filter: ST_Length(geometry)>2*ZRES0
-    tolerance: ZRES5
+    tolerance: ZRES4
 
 # etldoc: osm_shipway_linestring_gen_z6 -> osm_shipway_linestring_gen_z5
   shipway_linestring_gen_z5:
     source: shipway_linestring_gen_z6
     sql_filter: ST_Length(geometry)>ZRES0
-    tolerance: ZRES6
+    tolerance: ZRES5
 
 # etldoc: osm_shipway_linestring_gen_z7 -> osm_shipway_linestring_gen_z6
   shipway_linestring_gen_z6:
     source: shipway_linestring_gen_z7
     sql_filter: ST_Length(geometry)>ZRES1
-    tolerance: ZRES7
+    tolerance: ZRES6
 
 # etldoc: osm_shipway_linestring_gen_z8 -> osm_shipway_linestring_gen_z7
   shipway_linestring_gen_z7:
     source: shipway_linestring_gen_z8
     sql_filter: ST_Length(geometry)>ZRES2
-    tolerance: ZRES8
+    tolerance: ZRES7
 
 # etldoc: osm_shipway_linestring_gen_z9 -> osm_shipway_linestring_gen_z8
   shipway_linestring_gen_z8:
     source: shipway_linestring_gen_z9
     sql_filter: ST_Length(geometry)>ZRES3
-    tolerance: ZRES9
+    tolerance: ZRES8
 
 # etldoc: osm_shipway_linestring_gen_z10 -> osm_shipway_linestring_gen_z9
   shipway_linestring_gen_z9:
     source: shipway_linestring_gen_z10
     sql_filter: ST_Length(geometry)>ZRES4
-    tolerance: ZRES10
+    tolerance: ZRES9
 
 # etldoc: osm_shipway_linestring_gen_z11 -> osm_shipway_linestring_gen_z10
   shipway_linestring_gen_z10:
     source: shipway_linestring_gen_z11
     sql_filter: ST_Length(geometry)>ZRES5
-    tolerance: ZRES11
+    tolerance: ZRES10
 
 # etldoc: osm_shipway_linestring_gen_z12 -> osm_shipway_linestring_gen_z11
   shipway_linestring_gen_z11:
     source: shipway_linestring_gen_z12
-    tolerance: ZRES12
+    tolerance: ZRES11
 
 # etldoc: osm_shipway_linestring -> osm_shipway_linestring_gen_z12
   shipway_linestring_gen_z12:
     source: shipway_linestring
     sql_filter: ST_IsValid(geometry)
+    tolerance: ZRES12
+
+  shipway_linestring_gen_z13:
+    source: shipway_linestring
+    sql_filter: ST_IsValid(geometry)
     tolerance: ZRES13
+  shipway_linestring_gen_z14:
+    source: shipway_linestring
+    sql_filter: ST_IsValid(geometry)
+    tolerance: ZRES14
+  shipway_linestring_gen_z15:
+    source: shipway_linestring
+    sql_filter: ST_IsValid(geometry)
+    tolerance: ZRES15
+  shipway_linestring_gen_z16:
+    source: shipway_linestring
+    sql_filter: ST_IsValid(geometry)
+    tolerance: ZRES16
+  shipway_linestring_gen_z17:
+    source: shipway_linestring
+    sql_filter: ST_IsValid(geometry)
+    tolerance: ZRES17
 
 # etldoc: osm_highway_linestring -> osm_highway_linestring_gen_z11
   highway_linestring_gen_z11:
+    source: highway_linestring_gen_z12
+    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
+    tolerance: ZRES13
+
+  highway_linestring_gen_z12:
+    source: highway_linestring_gen_z13
+    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
+    tolerance: ZRES14
+  highway_linestring_gen_z13:
+    source: highway_linestring_gen_z14
+    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
+    tolerance: ZRES15
+  highway_linestring_gen_z14:
+    source: highway_linestring_gen_z15
+    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
+    tolerance: ZRES16
+  highway_linestring_gen_z15:
     source: highway_linestring
     sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
-    tolerance: ZRES12
+    tolerance: ZRES17
 
 name_field: &name
   name: name

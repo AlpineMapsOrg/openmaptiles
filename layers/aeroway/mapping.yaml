@@ -2,18 +2,35 @@ generalized_tables:
   # etldoc: osm_aeroway_linestring_gen_z11 -> osm_aeroway_linestring_gen_z10
   aeroway_linestring_gen_z10:
     source: aeroway_linestring_gen_z11
-    tolerance: ZRES11
+    tolerance: ZRES10
 
   # etldoc: osm_aeroway_linestring_gen_z12 -> osm_aeroway_linestring_gen_z11
   aeroway_linestring_gen_z11:
     source: aeroway_linestring_gen_z12
-    tolerance: ZRES12
+    tolerance: ZRES11
 
   # etldoc: osm_aeroway_linestring -> osm_aeroway_linestring_gen_z12
   aeroway_linestring_gen_z12:
+    source: aeroway_linestring_gen_z13
+    tolerance: ZRES12
+
+
+  aeroway_linestring_gen_z13:
+    source: aeroway_linestring_gen_z14
+    tolerance: ZRES13
+  aeroway_linestring_gen_z14:
+    source: aeroway_linestring_gen_z15
+    tolerance: ZRES14
+  aeroway_linestring_gen_z15:
+    source: aeroway_linestring_gen_z16
+    tolerance: ZRES15
+  aeroway_linestring_gen_z16:
+    source: aeroway_linestring_gen_z17
+    tolerance: ZRES16
+  aeroway_linestring_gen_z17:
     source: aeroway_linestring
     sql_filter: ST_IsValid(geometry)
-    tolerance: ZRES13
+    tolerance: ZRES17
 
   # etldoc: osm_aeroway_polygon_gen_z11 -> osm_aeroway_polygon_gen_z10
   aeroway_polygon_gen_z10:
@@ -35,9 +52,27 @@ generalized_tables:
 
   # etldoc: osm_aeroway_polygon -> osm_aeroway_polygon_gen_z13
   aeroway_polygon_gen_z13:
-    source: aeroway_polygon
-    sql_filter: area>power(ZRES12,2) AND ST_IsValid(geometry)
+    source: aeroway_polygon_gen_z14
+    sql_filter: area>power(ZRES12,2)
     tolerance: ZRES13
+
+
+  aeroway_polygon_gen_z14:
+    source: aeroway_polygon_gen_z15
+    sql_filter: area>power(ZRES13,2)
+    tolerance: ZRES14
+  aeroway_polygon_gen_z15:
+    source: aeroway_polygon_gen_z16
+    sql_filter: area>power(ZRES14,2)
+    tolerance: ZRES15
+  aeroway_polygon_gen_z16:
+    source: aeroway_polygon_gen_z17
+    sql_filter: area>power(ZRES15,2)
+    tolerance: ZRES16
+  aeroway_polygon_gen_z17:
+    source: aeroway_polygon
+    sql_filter: area>power(ZRES16,2) AND ST_IsValid(geometry)
+    tolerance: ZRES17
 
 ref_field: &ref
   key: ref
