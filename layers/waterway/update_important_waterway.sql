@@ -43,11 +43,26 @@ CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_o_source_ids_not_nu
 -- Create osm_important_waterway_linestring_gen_z11 as a copy of osm_important_waterway_linestring but drop the
 -- "source_ids" column. This can be done because z10 and z9 tables are only simplified and not merged, therefore
 -- relations to sources are direct via the id column.
-CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z11
+CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z15
 (LIKE osm_important_waterway_linestring);
-ALTER TABLE osm_important_waterway_linestring_gen_z11 DROP COLUMN IF EXISTS source_ids;
-ALTER TABLE osm_important_waterway_linestring_gen_z11 DROP COLUMN IF EXISTS new_source_ids;
-ALTER TABLE osm_important_waterway_linestring_gen_z11 DROP COLUMN IF EXISTS old_source_ids;
+ALTER TABLE osm_important_waterway_linestring_gen_z15 DROP COLUMN IF EXISTS source_ids;
+ALTER TABLE osm_important_waterway_linestring_gen_z15 DROP COLUMN IF EXISTS new_source_ids;
+ALTER TABLE osm_important_waterway_linestring_gen_z15 DROP COLUMN IF EXISTS old_source_ids;
+
+CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z14
+(LIKE osm_important_waterway_linestring_gen_z15);
+
+
+CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z13
+(LIKE osm_important_waterway_linestring_gen_z14);
+
+
+CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z12
+(LIKE osm_important_waterway_linestring_gen_z13);
+
+
+CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z11
+(LIKE osm_important_waterway_linestring_gen_z12);
 
 -- Create osm_important_waterway_linestring_gen_z10 as a copy of osm_important_waterway_linestring_gen_z11
 CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring_gen_z10
@@ -116,6 +131,39 @@ BEGIN
     ) THEN
         ALTER TABLE osm_important_waterway_linestring ADD PRIMARY KEY (id);
     END IF;
+
+    IF NOT EXISTS (
+        SELECT constraint_name
+        FROM information_schema.table_constraints
+        WHERE table_name = 'osm_important_waterway_linestring_gen_z15' AND constraint_type = 'PRIMARY KEY'
+    ) THEN
+        ALTER TABLE osm_important_waterway_linestring_gen_z15 ADD PRIMARY KEY (id);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT constraint_name
+        FROM information_schema.table_constraints
+        WHERE table_name = 'osm_important_waterway_linestring_gen_z14' AND constraint_type = 'PRIMARY KEY'
+    ) THEN
+        ALTER TABLE osm_important_waterway_linestring_gen_z14 ADD PRIMARY KEY (id);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT constraint_name
+        FROM information_schema.table_constraints
+        WHERE table_name = 'osm_important_waterway_linestring_gen_z13' AND constraint_type = 'PRIMARY KEY'
+    ) THEN
+        ALTER TABLE osm_important_waterway_linestring_gen_z13 ADD PRIMARY KEY (id);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT constraint_name
+        FROM information_schema.table_constraints
+        WHERE table_name = 'osm_important_waterway_linestring_gen_z12' AND constraint_type = 'PRIMARY KEY'
+    ) THEN
+        ALTER TABLE osm_important_waterway_linestring_gen_z12 ADD PRIMARY KEY (id);
+    END IF;
+
 
     IF NOT EXISTS (
         SELECT constraint_name
@@ -192,16 +240,16 @@ BEGIN
     ANALYZE osm_important_waterway_linestring;
 
     -- Remove entries which have been deleted from source table
-    DELETE FROM osm_important_waterway_linestring_gen_z11
+    DELETE FROM osm_important_waterway_linestring_gen_z15
     USING waterway_important.changes_z9_z10_z11
     WHERE full_update IS TRUE OR (
         waterway_important.changes_z9_z10_z11.is_old IS TRUE AND
-        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z11.id
+        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z15.id
     );
 
-    -- etldoc: osm_important_waterway_linestring -> osm_important_waterway_linestring_gen_z11
-    INSERT INTO osm_important_waterway_linestring_gen_z11 (geometry, id, name, name_en, name_de, tags)
-    SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
+    -- etldoc: osm_important_waterway_linestring -> osm_important_waterway_linestring_gen_z15
+    INSERT INTO osm_important_waterway_linestring_gen_z15 (geometry, id, name, name_en, name_de, tags)
+    SELECT ST_Simplify(geometry, ZRes(15)) AS geometry,
         id,
         name,
         name_en,
@@ -216,12 +264,152 @@ BEGIN
             WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
                   waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring.id
         )
+    ) AND ST_Length(geometry) > 125
+    ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
+                                   name_de = excluded.name_de, tags = excluded.tags;
+
+    -- Analyze source table
+    ANALYZE osm_important_waterway_linestring_gen_z15;
+
+
+
+
+
+
+    -- Remove entries which have been deleted from source table
+    DELETE FROM osm_important_waterway_linestring_gen_z14
+    USING waterway_important.changes_z9_z10_z11
+    WHERE full_update IS TRUE OR (
+        waterway_important.changes_z9_z10_z11.is_old IS TRUE AND
+        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z14.id
+    );
+
+    INSERT INTO osm_important_waterway_linestring_gen_z14 (geometry, id, name, name_en, name_de, tags)
+    SELECT ST_Simplify(geometry, ZRes(14)) AS geometry,
+        id,
+        name,
+        name_en,
+        name_de,
+        tags
+    FROM osm_important_waterway_linestring_gen_z15
+    WHERE (
+        full_update OR
+        EXISTS(
+            SELECT NULL
+            FROM waterway_important.changes_z9_z10_z11
+            WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
+                  waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z15.id
+        )
+    ) AND ST_Length(geometry) > 250
+    ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
+                                   name_de = excluded.name_de, tags = excluded.tags;
+
+    -- Analyze source table
+    ANALYZE osm_important_waterway_linestring_gen_z14;
+
+
+
+    -- Remove entries which have been deleted from source table
+    DELETE FROM osm_important_waterway_linestring_gen_z13
+    USING waterway_important.changes_z9_z10_z11
+    WHERE full_update IS TRUE OR (
+        waterway_important.changes_z9_z10_z11.is_old IS TRUE AND
+        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z13.id
+    );
+
+    INSERT INTO osm_important_waterway_linestring_gen_z13 (geometry, id, name, name_en, name_de, tags)
+    SELECT ST_Simplify(geometry, ZRes(13)) AS geometry,
+        id,
+        name,
+        name_en,
+        name_de,
+        tags
+    FROM osm_important_waterway_linestring_gen_z14
+    WHERE (
+        full_update OR
+        EXISTS(
+            SELECT NULL
+            FROM waterway_important.changes_z9_z10_z11
+            WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
+                  waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z14.id
+        )
+    ) AND ST_Length(geometry) > 500
+    ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
+                                   name_de = excluded.name_de, tags = excluded.tags;
+
+    -- Analyze source table
+    ANALYZE osm_important_waterway_linestring_gen_z13;
+
+
+
+    -- Remove entries which have been deleted from source table
+    DELETE FROM osm_important_waterway_linestring_gen_z12
+    USING waterway_important.changes_z9_z10_z11
+    WHERE full_update IS TRUE OR (
+        waterway_important.changes_z9_z10_z11.is_old IS TRUE AND
+        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z12.id
+    );
+
+    INSERT INTO osm_important_waterway_linestring_gen_z12 (geometry, id, name, name_en, name_de, tags)
+    SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
+        id,
+        name,
+        name_en,
+        name_de,
+        tags
+    FROM osm_important_waterway_linestring_gen_z13
+    WHERE (
+        full_update OR
+        EXISTS(
+            SELECT NULL
+            FROM waterway_important.changes_z9_z10_z11
+            WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
+                  waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z13.id
+        )
     ) AND ST_Length(geometry) > 1000
     ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
                                    name_de = excluded.name_de, tags = excluded.tags;
 
     -- Analyze source table
+    ANALYZE osm_important_waterway_linestring_gen_z12;
+
+
+    -- Remove entries which have been deleted from source table
+    DELETE FROM osm_important_waterway_linestring_gen_z11
+    USING waterway_important.changes_z9_z10_z11
+    WHERE full_update IS TRUE OR (
+        waterway_important.changes_z9_z10_z11.is_old IS TRUE AND
+        waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z11.id
+    );
+
+    INSERT INTO osm_important_waterway_linestring_gen_z11 (geometry, id, name, name_en, name_de, tags)
+    SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
+        id,
+        name,
+        name_en,
+        name_de,
+        tags
+    FROM osm_important_waterway_linestring_gen_z12
+    WHERE (
+        full_update OR
+        EXISTS(
+            SELECT NULL
+            FROM waterway_important.changes_z9_z10_z11
+            WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
+                  waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z12.id
+        )
+    ) AND ST_Length(geometry) > 2000
+    ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
+                                   name_de = excluded.name_de, tags = excluded.tags;
+
+    -- Analyze source table
     ANALYZE osm_important_waterway_linestring_gen_z11;
+
+
+
+
+
+
 
     -- Remove entries which have been deleted from source table
     DELETE FROM osm_important_waterway_linestring_gen_z10
@@ -292,6 +480,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Ensure tables are emtpy if they haven't been created
+TRUNCATE osm_important_waterway_linestring_gen_z15;
+TRUNCATE osm_important_waterway_linestring_gen_z14;
+TRUNCATE osm_important_waterway_linestring_gen_z13;
+TRUNCATE osm_important_waterway_linestring_gen_z12;
 TRUNCATE osm_important_waterway_linestring_gen_z11;
 TRUNCATE osm_important_waterway_linestring_gen_z10;
 TRUNCATE osm_important_waterway_linestring_gen_z9;
@@ -299,12 +491,28 @@ TRUNCATE osm_important_waterway_linestring_gen_z9;
 SELECT insert_important_waterway_linestring_gen(TRUE);
 
 -- Indexes for queries originating from insert_important_waterway_linestring_gen() function
+CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z15_update_idx
+    ON osm_important_waterway_linestring_gen_z15 (id) WHERE ST_Length(geometry) > 500;
+    CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z14_update_idx
+    ON osm_important_waterway_linestring_gen_z14 (id) WHERE ST_Length(geometry) > 1000;
+    CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z13_update_idx
+    ON osm_important_waterway_linestring_gen_z13 (id) WHERE ST_Length(geometry) > 2000;
+    CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z12_update_idx
+    ON osm_important_waterway_linestring_gen_z12 (id) WHERE ST_Length(geometry) > 4000;
 CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z11_update_idx
     ON osm_important_waterway_linestring_gen_z11 (id) WHERE ST_Length(geometry) > 4000;
 CREATE UNIQUE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z10_update_idx
     ON osm_important_waterway_linestring_gen_z10 (id) WHERE ST_Length(geometry) > 8000;
 
 -- Geometry Indexes
+CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z15_geometry_idx
+    ON osm_important_waterway_linestring_gen_z15 USING gist (geometry);
+CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z14_geometry_idx
+    ON osm_important_waterway_linestring_gen_z14 USING gist (geometry);
+CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z13_geometry_idx
+    ON osm_important_waterway_linestring_gen_z13 USING gist (geometry);
+CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z12_geometry_idx
+    ON osm_important_waterway_linestring_gen_z12 USING gist (geometry);
 CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z11_geometry_idx
     ON osm_important_waterway_linestring_gen_z11 USING gist (geometry);
 CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_gen_z10_geometry_idx

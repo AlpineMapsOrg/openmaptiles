@@ -312,6 +312,33 @@ SELECT geometry,
 FROM osm_waterway_linestring
     );
 
+CREATE OR REPLACE VIEW waterway_z15 AS
+(
+SELECT geometry,
+       waterway::text AS class,
+       name,
+       name_en,
+       name_de,
+       tags,
+       is_bridge,
+       is_tunnel,
+       is_intermittent
+FROM osm_waterway_linestring
+    );
+CREATE OR REPLACE VIEW waterway_z16 AS
+(
+SELECT geometry,
+       waterway::text AS class,
+       name,
+       name_en,
+       name_de,
+       tags,
+       is_bridge,
+       is_tunnel,
+       is_intermittent
+FROM osm_waterway_linestring
+    );
+
 -- etldoc: layer_waterway[shape=record fillcolor=lightpink, style="rounded,filled",
 -- etldoc: label="layer_waterway | <z3> z3 |<z4> z4 |<z5> z5 |<z6> z6 |<z7> z7 |<z8> z8 | <z9> z9 |<z10> z10 |<z11> z11 |<z12> z12|<z13> z13|<z14> z14+" ];
 
@@ -396,7 +423,15 @@ FROM (
          -- etldoc: waterway_z14 ->  layer_waterway:z14
          SELECT *
          FROM waterway_z14
-         WHERE zoom_level >= 14
+         WHERE zoom_level = 14
+         UNION ALL
+         SELECT *
+         FROM waterway_z15
+         WHERE zoom_level = 15
+         UNION ALL
+         SELECT *
+         FROM waterway_z16
+         WHERE zoom_level >= 16
      ) AS zoom_levels
 WHERE geometry && bbox;
 $$ LANGUAGE SQL STABLE

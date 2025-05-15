@@ -371,7 +371,7 @@ FROM (
                 hl.z_order
          FROM osm_highway_linestring_gen_z12 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
-         WHERE zoom_level = 12 AND NOT is_area
+         WHERE zoom_level = 12
            AND
              CASE WHEN transportation_filter_z12(hl.highway, hl.construction) THEN TRUE
                   WHEN hl.highway IN ('track', 'path') THEN n.route_rank = 1
@@ -411,7 +411,7 @@ FROM (
                 hl.z_order
          FROM osm_highway_linestring_gen_z13 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
-         WHERE zoom_level = 13 AND NOT is_area
+         WHERE zoom_level = 13
            AND
              CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
                   WHEN hl.highway IN ('track', 'path') THEN (hl.name <> ''
@@ -456,7 +456,7 @@ FROM (
                 hl.z_order
          FROM osm_highway_linestring_gen_z14 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
-         WHERE zoom_level = 14 AND NOT is_area
+         WHERE zoom_level = 14
            AND
                  CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
                       ELSE TRUE
@@ -495,7 +495,81 @@ FROM (
                 hl.z_order
          FROM osm_highway_linestring_gen_z15 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
-         WHERE zoom_level = 15 AND NOT is_area
+         WHERE zoom_level = 15
+           AND
+                 CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
+                      ELSE TRUE
+                 END
+         UNION ALL
+
+         SELECT hl.osm_id,
+                hl.geometry,
+                hl.highway,
+                construction,
+                network,
+                NULL AS railway,
+                NULL AS aerialway,
+                NULL AS shipway,
+                public_transport,
+                service_value(service) AS service,
+                CASE WHEN access IN ('private', 'no') THEN 'no' END AS access,
+                toll,
+                is_bridge,
+                is_tunnel,
+                is_ford,
+                expressway,
+                is_ramp,
+                is_oneway,
+                man_made,
+                hl.layer,
+                CASE WHEN hl.highway IN ('footway', 'steps') THEN hl.level END AS level,
+                CASE WHEN hl.highway IN ('footway', 'steps') THEN hl.indoor END AS indoor,
+                bicycle,
+                foot,
+                horse,
+                mtb_scale,
+                surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                hl.z_order
+         FROM osm_highway_linestring_gen_z16 hl
+         LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
+         WHERE zoom_level = 16
+           AND
+                 CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
+                      ELSE TRUE
+                 END
+         UNION ALL
+
+         SELECT hl.osm_id,
+                hl.geometry,
+                hl.highway,
+                construction,
+                network,
+                NULL AS railway,
+                NULL AS aerialway,
+                NULL AS shipway,
+                public_transport,
+                service_value(service) AS service,
+                CASE WHEN access IN ('private', 'no') THEN 'no' END AS access,
+                toll,
+                is_bridge,
+                is_tunnel,
+                is_ford,
+                expressway,
+                is_ramp,
+                is_oneway,
+                man_made,
+                hl.layer,
+                CASE WHEN hl.highway IN ('footway', 'steps') THEN hl.level END AS level,
+                CASE WHEN hl.highway IN ('footway', 'steps') THEN hl.indoor END AS indoor,
+                bicycle,
+                foot,
+                horse,
+                mtb_scale,
+                surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                hl.z_order
+         FROM osm_highway_linestring_gen_z17 hl
+         LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
+         WHERE zoom_level = 17
            AND
                  CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
                       ELSE TRUE
@@ -535,7 +609,7 @@ FROM (
                 hl.z_order
          FROM osm_highway_linestring hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
-         WHERE zoom_level > 15 AND NOT is_area
+         WHERE zoom_level > 17 AND NOT is_area
            AND
              CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
                   ELSE TRUE
@@ -1772,6 +1846,86 @@ FROM (
                  OR (is_area AND COALESCE(layer, 0) >= 0)
              )
 
+           UNION ALL
+         SELECT osm_id,
+                geometry,
+                highway,
+                NULL AS construction,
+                NULL AS network,
+                NULL AS railway,
+                NULL AS aerialway,
+                NULL AS shipway,
+                public_transport,
+                NULL AS service,
+                NULL::text AS access,
+                NULL::boolean AS toll,
+                CASE
+                    WHEN man_made IN ('bridge') THEN TRUE
+                    ELSE FALSE
+                    END AS is_bridge,
+                FALSE AS is_tunnel,
+                FALSE AS is_ford,
+                NULL::boolean AS expressway,
+                FALSE AS is_ramp,
+                FALSE::int AS is_oneway,
+                man_made,
+                layer,
+                NULL::int AS level,
+                NULL::boolean AS indoor,
+                NULL AS bicycle,
+                NULL AS foot,
+                NULL AS horse,
+                NULL AS mtb_scale,
+                NULL AS surface,
+                z_order
+         FROM osm_highway_linestring_gen_z16
+              -- We do not want underground pedestrian areas for now
+         WHERE zoom_level = 16
+           AND (
+                 man_made IN ('bridge', 'pier')
+                 OR (is_area AND COALESCE(layer, 0) >= 0)
+             )
+
+           UNION ALL
+         SELECT osm_id,
+                geometry,
+                highway,
+                NULL AS construction,
+                NULL AS network,
+                NULL AS railway,
+                NULL AS aerialway,
+                NULL AS shipway,
+                public_transport,
+                NULL AS service,
+                NULL::text AS access,
+                NULL::boolean AS toll,
+                CASE
+                    WHEN man_made IN ('bridge') THEN TRUE
+                    ELSE FALSE
+                    END AS is_bridge,
+                FALSE AS is_tunnel,
+                FALSE AS is_ford,
+                NULL::boolean AS expressway,
+                FALSE AS is_ramp,
+                FALSE::int AS is_oneway,
+                man_made,
+                layer,
+                NULL::int AS level,
+                NULL::boolean AS indoor,
+                NULL AS bicycle,
+                NULL AS foot,
+                NULL AS horse,
+                NULL AS mtb_scale,
+                NULL AS surface,
+                z_order
+         FROM osm_highway_linestring_gen_z17
+              -- We do not want underground pedestrian areas for now
+         WHERE zoom_level = 17
+           AND (
+                 man_made IN ('bridge', 'pier')
+                 OR (is_area AND COALESCE(layer, 0) >= 0)
+             )
+
          
 
          UNION ALL
@@ -1809,7 +1963,7 @@ FROM (
                 z_order
          FROM osm_highway_polygon
               -- We do not want underground pedestrian areas for now
-         WHERE zoom_level > 15
+         WHERE zoom_level > 17
            AND (
                  man_made IN ('bridge', 'pier')
                  OR (is_area AND COALESCE(layer, 0) >= 0)

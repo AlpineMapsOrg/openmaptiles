@@ -4,7 +4,7 @@
 sudo service postgresql stop
 
 
-# deep clean all 
+## deep clean all -> by destroying all containers we force all data to be redone
 make destroy-db
 make stop-db
 make clean-unnecessary-docker

@@ -27,11 +27,33 @@ FROM (
          FROM osm_aeroway_linestring_gen_z12
          WHERE zoom_level = 12
          UNION ALL
+
+
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_linestring_gen_z13
+         WHERE zoom_level = 13
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_linestring_gen_z14
+         WHERE zoom_level = 14
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_linestring_gen_z15
+         WHERE zoom_level = 15
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_linestring_gen_z16
+         WHERE zoom_level = 16
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_linestring_gen_z17
+         WHERE zoom_level = 17
+         UNION ALL
          -- etldoc:  osm_aeroway_linestring -> layer_aeroway:z13
          -- etldoc:  osm_aeroway_linestring -> layer_aeroway:z14_
          SELECT geometry, aeroway, ref
          FROM osm_aeroway_linestring
-         WHERE zoom_level >= 13
+         WHERE zoom_level >= 18
          UNION ALL
          -- etldoc:  osm_aeroway_polygon_gen_z10 -> layer_aeroway:z10
          SELECT geometry, aeroway, ref
@@ -53,10 +75,27 @@ FROM (
          FROM osm_aeroway_polygon_gen_z13
          WHERE zoom_level = 13
          UNION ALL
+
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_polygon_gen_z14
+         WHERE zoom_level = 14
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_polygon_gen_z15
+         WHERE zoom_level = 15
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_polygon_gen_z16
+         WHERE zoom_level = 16
+         UNION ALL
+         SELECT geometry, aeroway, ref
+         FROM osm_aeroway_polygon_gen_z17
+         WHERE zoom_level = 17
+         UNION ALL
          -- etldoc:  osm_aeroway_polygon -> layer_aeroway:z14_
          SELECT geometry, aeroway, ref
          FROM osm_aeroway_polygon
-         WHERE zoom_level >= 14
+         WHERE zoom_level >= 18
          UNION ALL
          
          -- etldoc:  osm_aeroway_point -> layer_aeroway:z14_

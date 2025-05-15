@@ -177,7 +177,61 @@ FROM (
                   WHERE zoom_level = 13
                     AND geometry && bbox
                   UNION ALL
-                  -- etldoc: osm_park_polygon -> layer_park:z14
+
+                  SELECT osm_id,
+                         geometry,
+                         name,
+                         name_en,
+                         name_de,
+                         tags,
+                         leisure,
+                         boundary,
+                         protection_title
+                  FROM osm_park_polygon_gen_z14
+                  WHERE zoom_level = 14
+                    AND geometry && bbox
+                  UNION ALL
+
+                  SELECT osm_id,
+                         geometry,
+                         name,
+                         name_en,
+                         name_de,
+                         tags,
+                         leisure,
+                         boundary,
+                         protection_title
+                  FROM osm_park_polygon_gen_z15
+                  WHERE zoom_level = 15
+                    AND geometry && bbox
+                  UNION ALL
+
+                  SELECT osm_id,
+                         geometry,
+                         name,
+                         name_en,
+                         name_de,
+                         tags,
+                         leisure,
+                         boundary,
+                         protection_title
+                  FROM osm_park_polygon_gen_z16
+                  WHERE zoom_level = 16
+                    AND geometry && bbox
+                  UNION ALL
+                  SELECT osm_id,
+                         geometry,
+                         name,
+                         name_en,
+                         name_de,
+                         tags,
+                         leisure,
+                         boundary,
+                         protection_title
+                  FROM osm_park_polygon_gen_z17
+                  WHERE zoom_level = 17
+                    AND geometry && bbox
+                  UNION ALL
                   SELECT osm_id,
                          geometry,
                          name,
@@ -188,198 +242,262 @@ FROM (
                          boundary,
                          protection_title
                   FROM osm_park_polygon
-                  WHERE zoom_level >= 14
+                  WHERE zoom_level >= 18
                     AND geometry && bbox
               ) AS park_polygon
 
-         UNION ALL
-         SELECT osm_id,
-                geometry_point AS geometry,
-                COALESCE(
-                        LOWER(REPLACE(NULLIF(protection_title, ''), ' ', '_')),
-                        NULLIF(boundary, ''),
-                        NULLIF(leisure, '')
-                    ) AS class,
-                name,
-                name_en,
-                name_de,
-                tags,
-                row_number() OVER (
-                    PARTITION BY LabelGrid(geometry_point, 100 * pixel_width)
-                    ORDER BY
-                        (CASE WHEN boundary = 'national_park' THEN TRUE ELSE FALSE END) DESC,
-                        (COALESCE(NULLIF(tags->'wikipedia', ''), NULLIF(tags->'wikidata', '')) IS NOT NULL) DESC,
-                        area DESC
-                    )::int AS "rank"
-         FROM (
-                  -- etldoc: osm_park_polygon_gen_z5 -> layer_park:z5
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z5
-                  WHERE zoom_level = 5
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         -- UNION ALL
+         -- SELECT osm_id,
+         --        geometry_point AS geometry,
+         --        COALESCE(
+         --                LOWER(REPLACE(NULLIF(protection_title, ''), ' ', '_')),
+         --                NULLIF(boundary, ''),
+         --                NULLIF(leisure, '')
+         --            ) AS class,
+         --        name,
+         --        name_en,
+         --        name_de,
+         --        tags,
+         --        row_number() OVER (
+         --            PARTITION BY LabelGrid(geometry_point, 100 * pixel_width)
+         --            ORDER BY
+         --                (CASE WHEN boundary = 'national_park' THEN TRUE ELSE FALSE END) DESC,
+         --                (COALESCE(NULLIF(tags->'wikipedia', ''), NULLIF(tags->'wikidata', '')) IS NOT NULL) DESC,
+         --                area DESC
+         --            )::int AS "rank"
+         -- FROM (
+         --          -- etldoc: osm_park_polygon_gen_z5 -> layer_park:z5
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z5
+         --          WHERE zoom_level = 5
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z6 -> layer_park:z6
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z6
-                  WHERE zoom_level = 6
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z6 -> layer_park:z6
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z6
+         --          WHERE zoom_level = 6
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z7 -> layer_park:z7
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z7
-                  WHERE zoom_level = 7
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z7 -> layer_park:z7
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z7
+         --          WHERE zoom_level = 7
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z8 -> layer_park:z8
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z8
-                  WHERE zoom_level = 8
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z8 -> layer_park:z8
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z8
+         --          WHERE zoom_level = 8
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z9 -> layer_park:z9
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z9
-                  WHERE zoom_level = 9
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z9 -> layer_park:z9
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z9
+         --          WHERE zoom_level = 9
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z10 -> layer_park:z10
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z10
-                  WHERE zoom_level = 10
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z10 -> layer_park:z10
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z10
+         --          WHERE zoom_level = 10
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z11 -> layer_park:z11
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z11
-                  WHERE zoom_level = 11
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z11 -> layer_park:z11
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z11
+         --          WHERE zoom_level = 11
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z12 -> layer_park:z12
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z12
-                  WHERE zoom_level = 12
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z12 -> layer_park:z12
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z12
+         --          WHERE zoom_level = 12
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon_gen_z13 -> layer_park:z13
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon_gen_z13
-                  WHERE zoom_level = 13
-                    AND geometry_point && bbox
-                    AND area > 70000*2^(20-zoom_level)
-                  UNION ALL
+         --          -- etldoc: osm_park_polygon_gen_z13 -> layer_park:z13
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z13
+         --          WHERE zoom_level = 13
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
 
-                  -- etldoc: osm_park_polygon -> layer_park:z14
-                  SELECT osm_id,
-                         geometry_point,
-                         name,
-                         name_en,
-                         name_de,
-                         tags,
-                         leisure,
-                         boundary,
-                         protection_title,
-                         area
-                  FROM osm_park_polygon
-                  WHERE zoom_level >= 14
-                    AND geometry_point && bbox
-              ) AS park_point
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z14
+         --          WHERE zoom_level = 14
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
+
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z15
+         --          WHERE zoom_level = 15
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
+
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z16
+         --          WHERE zoom_level = 16
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
+
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon_gen_z17
+         --          WHERE zoom_level = 17
+         --            AND geometry_point && bbox
+         --            AND area > 70000*2^(20-zoom_level)
+         --          UNION ALL
+
+         --          -- etldoc: osm_park_polygon -> layer_park:z14
+         --          SELECT osm_id,
+         --                 geometry_point,
+         --                 name,
+         --                 name_en,
+         --                 name_de,
+         --                 tags,
+         --                 leisure,
+         --                 boundary,
+         --                 protection_title,
+         --                 area
+         --          FROM osm_park_polygon
+         --          WHERE zoom_level >= 18
+         --            AND geometry_point && bbox
+         --      ) AS park_point
      ) AS park_all;
 $$ LANGUAGE SQL STABLE
                 PARALLEL SAFE;
