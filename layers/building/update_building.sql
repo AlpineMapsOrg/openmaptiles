@@ -9,7 +9,7 @@ DROP TRIGGER IF EXISTS trigger_flag ON osm_building_polygon;
 -- Returning recordset of buildings aggregates by zres 14, with removed small
 -- holes and with removed small buildings/blocks.
 
-CREATE OR REPLACE FUNCTION osm_building_block_gen1()
+CREATE OR REPLACE FUNCTION osm_building_block_gen(zoom int)
     RETURNS table
             (
                 osm_id   bigint,
@@ -18,9 +18,9 @@ CREATE OR REPLACE FUNCTION osm_building_block_gen1()
 AS
 $$
 DECLARE
-    zres14 float := Zres(14);
-    zres12 float := Zres(12);
-    zres14vw float := Zres(14) * Zres(14);
+    zres_big float := Zres(zoom+1);
+    zres_small float := Zres(zoom-1);
+    zres_big_vw float := Zres(zoom+1) * Zres(zoom+1);
     polyg_world record;
 
 BEGIN
@@ -33,7 +33,7 @@ BEGIN
                 WITH dta AS ( -- CTE is used because of optimization
                     SELECT o.osm_id,
                             o.geometry,
-                            ST_ClusterDBSCAN(o.geometry, eps := zres14, minpoints := 1) OVER () cid
+                            ST_ClusterDBSCAN(o.geometry, eps := zres_big, minpoints := 1) OVER () cid
                     FROM osm_building_polygon o
                     WHERE ST_Intersects(o.geometry, polyg_world.geometry)
                 )
@@ -42,9 +42,9 @@ BEGIN
                         ST_Union(
                             ST_Buffer(
                                 ST_SnapToGrid(dta.geometry, 0.000001)
-                                , zres14, 'join=mitre')
+                                , zres_big, 'join=mitre')
                             )
-                        , -zres14, 'join=mitre') AS geometry
+                        , -zres_big, 'join=mitre') AS geometry
                 FROM dta
                 GROUP BY cid
 
@@ -67,18 +67,18 @@ BEGIN
                                             SELECT array_agg(ST_Boundary(rg.geom)) holes -- 2 create array
                                             FROM ST_DumpRings(dmp.geom) rg -- 3 from rings
                                             WHERE rg.path[1] > 0 -- 5 except inner ring
-                                                AND ST_Area(rg.geom) >= power(zres12, 2) -- 4 bigger than
+                                                AND ST_Area(rg.geom) >= power(zres_small, 2) -- 4 bigger than
                                             ) holes
                                 ) new_geom
                         );
                     END IF;
 
-                    IF ST_Area(geometry) < power(zres12, 2) THEN
+                    IF ST_Area(geometry) < power(zres_small, 2) THEN
                         CONTINUE;
                     END IF;
 
                     -- simplify
-                    geometry := ST_SimplifyVW(geometry, zres14vw);
+                    geometry := ST_SimplifyVW(geometry, zres_big_vw);
 
                     RETURN NEXT;
                 END LOOP;
@@ -89,13 +89,172 @@ $$ LANGUAGE plpgsql STABLE
                     PARALLEL SAFE;
 
 
-DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen1_dup CASCADE;
 
-CREATE MATERIALIZED VIEW osm_building_block_gen1_dup AS
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen16 CASCADE;
+
+CREATE MATERIALIZED VIEW osm_building_block_gen16 AS
 SELECT *
-FROM osm_building_block_gen1();
+FROM osm_building_block_gen(16);
 
-CREATE INDEX ON osm_building_block_gen1_dup USING gist (geometry);
+CREATE INDEX ON osm_building_block_gen16 USING gist (geometry);
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen15 CASCADE;
+
+CREATE MATERIALIZED VIEW osm_building_block_gen15 AS
+SELECT *
+FROM osm_building_block_gen(15);
+
+CREATE INDEX ON osm_building_block_gen15 USING gist (geometry);
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen14 CASCADE;
+
+CREATE MATERIALIZED VIEW osm_building_block_gen14 AS
+SELECT *
+FROM osm_building_block_gen(14);
+
+CREATE INDEX ON osm_building_block_gen14 USING gist (geometry);
+
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen13 CASCADE;
+
+CREATE MATERIALIZED VIEW osm_building_block_gen13 AS
+SELECT *
+FROM osm_building_block_gen(13);
+
+CREATE INDEX ON osm_building_block_gen13 USING gist (geometry);
+
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen_z16;
+CREATE MATERIALIZED VIEW osm_building_block_gen_z16 AS
+(
+WITH 
+    counts AS (
+        SELECT count(osm_id) AS counts,
+                osm_id
+        FROM osm_building_block_gen16
+    GROUP BY osm_id
+    ),
+
+    duplicates AS (
+        SELECT counts.osm_id
+        FROM counts
+        WHERE counts.counts > 1
+    )
+
+SELECT osm.osm_id,
+        ST_Union(
+            ST_MakeValid(osm.geometry)) AS geometry
+    FROM osm_building_block_gen16 osm,
+            duplicates
+    WHERE osm.osm_id = duplicates.osm_id
+    GROUP BY osm.osm_id
+    
+    UNION ALL
+
+    SELECT osm.osm_id, 
+            osm.geometry 
+    FROM osm_building_block_gen16 osm, 
+            counts 
+    WHERE counts.counts = 1 
+        AND osm.osm_id = counts.osm_id
+);
+
+CREATE INDEX ON osm_building_block_gen_z16 USING gist (geometry);
+CREATE UNIQUE INDEX ON osm_building_block_gen_z16 USING btree (osm_id);
+
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen_z15;
+CREATE MATERIALIZED VIEW osm_building_block_gen_z15 AS
+(
+WITH 
+    counts AS (
+        SELECT count(osm_id) AS counts,
+                osm_id
+        FROM osm_building_block_gen15
+    GROUP BY osm_id
+    ),
+
+    duplicates AS (
+        SELECT counts.osm_id
+        FROM counts
+        WHERE counts.counts > 1
+    )
+
+SELECT osm.osm_id,
+        ST_Union(
+            ST_MakeValid(osm.geometry)) AS geometry
+    FROM osm_building_block_gen15 osm,
+            duplicates
+    WHERE osm.osm_id = duplicates.osm_id
+    GROUP BY osm.osm_id
+    
+    UNION ALL
+
+    SELECT osm.osm_id, 
+            osm.geometry 
+    FROM osm_building_block_gen15 osm, 
+            counts 
+    WHERE counts.counts = 1 
+        AND osm.osm_id = counts.osm_id
+);
+
+CREATE INDEX ON osm_building_block_gen_z15 USING gist (geometry);
+CREATE UNIQUE INDEX ON osm_building_block_gen_z15 USING btree (osm_id);
+
+
+
+
+DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen_z14;
+CREATE MATERIALIZED VIEW osm_building_block_gen_z14 AS
+(
+WITH 
+    counts AS (
+        SELECT count(osm_id) AS counts,
+                osm_id
+        FROM osm_building_block_gen14
+    GROUP BY osm_id
+    ),
+
+    duplicates AS (
+        SELECT counts.osm_id
+        FROM counts
+        WHERE counts.counts > 1
+    )
+
+SELECT osm.osm_id,
+        ST_Union(
+            ST_MakeValid(osm.geometry)) AS geometry
+    FROM osm_building_block_gen14 osm,
+            duplicates
+    WHERE osm.osm_id = duplicates.osm_id
+    GROUP BY osm.osm_id
+    
+    UNION ALL
+
+    SELECT osm.osm_id, 
+            osm.geometry 
+    FROM osm_building_block_gen14 osm, 
+            counts 
+    WHERE counts.counts = 1 
+        AND osm.osm_id = counts.osm_id
+);
+
+CREATE INDEX ON osm_building_block_gen_z14 USING gist (geometry);
+CREATE UNIQUE INDEX ON osm_building_block_gen_z14 USING btree (osm_id);
+
+
+
+
 
 -- etldoc: osm_building_polygon -> osm_building_block_gen_z13
 DROP MATERIALIZED VIEW IF EXISTS osm_building_block_gen_z13;
@@ -105,7 +264,7 @@ WITH
     counts AS (
         SELECT count(osm_id) AS counts,
 		        osm_id
-	    FROM osm_building_block_gen1_dup
+	    FROM osm_building_block_gen13
 	GROUP BY osm_id
     ),
 
@@ -118,7 +277,7 @@ WITH
 SELECT osm.osm_id,
 		ST_Union(
             ST_MakeValid(osm.geometry)) AS geometry
-	FROM osm_building_block_gen1_dup osm,
+	FROM osm_building_block_gen13 osm,
 			duplicates
 	WHERE osm.osm_id = duplicates.osm_id
 	GROUP BY osm.osm_id
@@ -127,7 +286,7 @@ SELECT osm.osm_id,
 
 	SELECT osm.osm_id, 
 			osm.geometry 
-	FROM osm_building_block_gen1_dup osm, 
+	FROM osm_building_block_gen13 osm, 
             counts 
 	WHERE counts.counts = 1 
 		AND osm.osm_id = counts.osm_id
@@ -135,6 +294,8 @@ SELECT osm.osm_id,
 
 CREATE INDEX ON osm_building_block_gen_z13 USING gist (geometry);
 CREATE UNIQUE INDEX ON osm_building_block_gen_z13 USING btree (osm_id);
+
+
 
 -- Handle updates
 
@@ -161,7 +322,13 @@ DECLARE
     t TIMESTAMP WITH TIME ZONE := clock_timestamp();
 BEGIN
     RAISE LOG 'Refresh buildings block';
-    REFRESH MATERIALIZED VIEW osm_building_block_gen1_dup;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen16;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen_z16;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen15;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen_z15;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen14;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen_z14;
+    REFRESH MATERIALIZED VIEW osm_building_block_gen13;
     REFRESH MATERIALIZED VIEW osm_building_block_gen_z13;
     -- noinspection SqlWithoutWhere
     DELETE FROM buildings.updates;

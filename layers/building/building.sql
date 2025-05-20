@@ -95,6 +95,42 @@ FROM (
            AND geometry && bbox
          UNION ALL
          SELECT
+             osm_id,
+             geometry,
+             NULL::int AS render_height,
+             NULL::int AS render_min_height,
+             NULL::text AS material,
+             NULL::text AS colour,
+             FALSE AS hide_3d
+         FROM osm_building_block_gen_z14
+         WHERE zoom_level = 14
+           AND geometry && bbox
+         UNION ALL
+         SELECT
+             osm_id,
+             geometry,
+             NULL::int AS render_height,
+             NULL::int AS render_min_height,
+             NULL::text AS material,
+             NULL::text AS colour,
+             FALSE AS hide_3d
+         FROM osm_building_block_gen_z15
+         WHERE zoom_level = 15
+           AND geometry && bbox
+         UNION ALL
+         SELECT
+             osm_id,
+             geometry,
+             NULL::int AS render_height,
+             NULL::int AS render_min_height,
+             NULL::text AS material,
+             NULL::text AS colour,
+             FALSE AS hide_3d
+         FROM osm_building_block_gen_z16
+         WHERE zoom_level = 16
+           AND geometry && bbox
+         UNION ALL
+         SELECT
                                   -- etldoc: osm_building_polygon -> layer_building:z14_
              DISTINCT ON (osm_id) osm_id,
                                   geometry,

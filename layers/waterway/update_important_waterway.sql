@@ -11,7 +11,7 @@ DROP TRIGGER IF EXISTS trigger_refresh ON waterway_important.updates;
 CREATE UNIQUE INDEX IF NOT EXISTS osm_waterway_linestring_waterway_partial_idx
     ON osm_waterway_linestring (osm_id)
     WHERE name <> ''
-      AND waterway = 'river'
+      -- AND waterway = 'river'
       AND ST_IsValid(geometry);
 
 -- Analyze created index
@@ -19,6 +19,7 @@ ANALYZE osm_waterway_linestring;
 
 CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring (
     id SERIAL,
+    class TEXT,
     geometry geometry('LineString'),
     source_ids bigint[],
     new_source_ids bigint[],
@@ -26,6 +27,11 @@ CREATE TABLE IF NOT EXISTS osm_important_waterway_linestring (
     name varchar,
     name_en varchar,
     name_de varchar,
+
+    is_bridge boolean,
+    is_tunnel boolean,
+    is_intermittent boolean,
+
     tags hstore
 );
 
@@ -87,7 +93,9 @@ TRUNCATE osm_important_waterway_linestring_source_ids;
 -- etldoc: osm_waterway_linestring ->  osm_important_waterway_linestring
 -- Merge LineStrings from osm_waterway_linestring by grouping them and creating intersecting
 -- clusters of each group via ST_ClusterDBSCAN
-INSERT INTO osm_important_waterway_linestring (geometry, source_ids, name, name_en, name_de, tags)
+
+
+INSERT INTO osm_important_waterway_linestring (geometry, source_ids, class, name, name_en, name_de, is_bridge,is_tunnel,is_intermittent, tags)
 SELECT (ST_Dump(ST_LineMerge(ST_Union(geometry)))).geom AS geometry,
        -- We use St_Union instead of St_Collect to ensure no overlapping points exist within the geometries
        -- to merge. https://postgis.net/docs/ST_Union.html
@@ -97,9 +105,13 @@ SELECT (ST_Dump(ST_LineMerge(ST_Union(geometry)))).geom AS geometry,
        -- In order to not end up with a mixture of LineStrings and MultiLineStrings we dump eventual
        -- MultiLineStrings via ST_Dump. https://postgis.net/docs/ST_Dump.html
        array_agg(osm_id) as source_ids,
+       waterway::text AS class,
        name,
        name_en,
        name_de,
+       is_bridge,
+       is_tunnel,
+       is_intermittent,
        slice_language_tags(tags) AS tags
 FROM (
     SELECT *,
@@ -113,9 +125,9 @@ FROM (
            -- Cluster-Group-ID by utilizing the DENSE_RANK function sorted over the partition columns.
            DENSE_RANK() OVER (ORDER BY name, name_en, name_de, slice_language_tags(tags)) as cluster_group
     FROM osm_waterway_linestring
-    WHERE name <> '' AND waterway = 'river' AND ST_IsValid(geometry)
+     WHERE name <> '' AND ST_IsValid(geometry) -- AND waterway = 'river' 
 ) q
-GROUP BY cluster_group, cluster, name, name_en, name_de, slice_language_tags(tags);
+GROUP BY cluster_group, cluster, class, name, name_en, name_de,is_bridge,is_tunnel,is_intermittent, slice_language_tags(tags);
 
 -- Geometry Index
 CREATE INDEX IF NOT EXISTS osm_important_waterway_linestring_geometry_idx
@@ -248,12 +260,14 @@ BEGIN
     );
 
     -- etldoc: osm_important_waterway_linestring -> osm_important_waterway_linestring_gen_z15
-    INSERT INTO osm_important_waterway_linestring_gen_z15 (geometry, id, name, name_en, name_de, tags)
+    INSERT INTO osm_important_waterway_linestring_gen_z15 (geometry, id, class, name, name_en, name_de, is_bridge,is_tunnel,is_intermittent, tags)
     SELECT ST_Simplify(geometry, ZRes(15)) AS geometry,
         id,
+        class,
         name,
         name_en,
         name_de,
+        is_bridge,is_tunnel,is_intermittent,
         tags
     FROM osm_important_waterway_linestring
     WHERE (
@@ -264,7 +278,7 @@ BEGIN
             WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
                   waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring.id
         )
-    ) AND ST_Length(geometry) > 125
+    ) AND ST_Length(geometry) > 125 AND class IN ('river', 'canal', 'stream', 'drain', 'ditch')
     ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
                                    name_de = excluded.name_de, tags = excluded.tags;
 
@@ -284,12 +298,14 @@ BEGIN
         waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z14.id
     );
 
-    INSERT INTO osm_important_waterway_linestring_gen_z14 (geometry, id, name, name_en, name_de, tags)
+    INSERT INTO osm_important_waterway_linestring_gen_z14 (geometry, id, class, name, name_en, name_de,is_bridge,is_tunnel,is_intermittent, tags)
     SELECT ST_Simplify(geometry, ZRes(14)) AS geometry,
         id,
+        class,
         name,
         name_en,
         name_de,
+        is_bridge,is_tunnel,is_intermittent,
         tags
     FROM osm_important_waterway_linestring_gen_z15
     WHERE (
@@ -317,12 +333,14 @@ BEGIN
         waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z13.id
     );
 
-    INSERT INTO osm_important_waterway_linestring_gen_z13 (geometry, id, name, name_en, name_de, tags)
+    INSERT INTO osm_important_waterway_linestring_gen_z13 (geometry, id,class, name, name_en, name_de,is_bridge,is_tunnel,is_intermittent, tags)
     SELECT ST_Simplify(geometry, ZRes(13)) AS geometry,
         id,
+        class,
         name,
         name_en,
         name_de,
+        is_bridge,is_tunnel,is_intermittent,
         tags
     FROM osm_important_waterway_linestring_gen_z14
     WHERE (
@@ -350,12 +368,14 @@ BEGIN
         waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z12.id
     );
 
-    INSERT INTO osm_important_waterway_linestring_gen_z12 (geometry, id, name, name_en, name_de, tags)
+    INSERT INTO osm_important_waterway_linestring_gen_z12 (geometry, id,class, name, name_en, name_de,is_bridge,is_tunnel,is_intermittent, tags)
     SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
         id,
+        class,
         name,
         name_en,
         name_de,
+        is_bridge,is_tunnel,is_intermittent,
         tags
     FROM osm_important_waterway_linestring_gen_z13
     WHERE (
@@ -366,7 +386,7 @@ BEGIN
             WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
                   waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z13.id
         )
-    ) AND ST_Length(geometry) > 1000
+    ) AND ST_Length(geometry) > 1000  AND class IN ('river', 'canal')
     ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
                                    name_de = excluded.name_de, tags = excluded.tags;
 
@@ -382,12 +402,16 @@ BEGIN
         waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z11.id
     );
 
-    INSERT INTO osm_important_waterway_linestring_gen_z11 (geometry, id, name, name_en, name_de, tags)
+    INSERT INTO osm_important_waterway_linestring_gen_z11 (geometry, id,class, name, name_en, name_de,is_bridge,is_tunnel,is_intermittent, tags)
     SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
         id,
+        class,
         name,
         name_en,
         name_de,
+        NULL::boolean AS is_bridge,
+        NULL::boolean AS is_tunnel,
+        NULL::boolean AS is_intermittent,
         tags
     FROM osm_important_waterway_linestring_gen_z12
     WHERE (
@@ -398,7 +422,7 @@ BEGIN
             WHERE waterway_important.changes_z9_z10_z11.is_old IS FALSE AND
                   waterway_important.changes_z9_z10_z11.id = osm_important_waterway_linestring_gen_z12.id
         )
-    ) AND ST_Length(geometry) > 2000
+    ) AND ST_Length(geometry) > 2000  AND class IN ('river')
     ON CONFLICT (id) DO UPDATE SET geometry = excluded.geometry, name = excluded.name, name_en = excluded.name_en,
                                    name_de = excluded.name_de, tags = excluded.tags;
 
