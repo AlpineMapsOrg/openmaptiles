@@ -152,13 +152,9 @@ generalized_tables:
     tolerance: ZRES14
   highway_linestring_gen_z15:
     source: highway_linestring_gen_z16
-    # prevent "paths" to appear in zoom levels < 15
-    sql_filter: (highway NOT IN ('pedestrian', 'path', 'footway', 'cycleway', 'steps', 'bridleway', 'corridor'))
     tolerance: ZRES15
   highway_linestring_gen_z16:
     source: highway_linestring_gen_z17
-    # prevent "city paths" to appear in zoom levels < 16
-    sql_filter: (highway NOT IN ('pedestrian', 'cycleway', 'steps', 'corridor'))
     tolerance: ZRES16
   highway_linestring_gen_z17:
     source: highway_linestring
