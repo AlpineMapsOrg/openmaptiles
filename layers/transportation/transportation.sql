@@ -1963,10 +1963,10 @@ FROM (
                 z_order
          FROM osm_highway_polygon
               -- We do not want underground pedestrian areas for now
-         WHERE zoom_level > 17
+         WHERE zoom_level >= 13
            AND (
                  man_made IN ('bridge', 'pier')
-                 OR (is_area AND COALESCE(layer, 0) >= 0)
+                 OR (ST_GeometryType(geometry)='ST_Polygon' AND COALESCE(layer, 0) >= 0)
              )
 
      ) AS zoom_levels
