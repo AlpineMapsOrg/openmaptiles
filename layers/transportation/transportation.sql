@@ -374,7 +374,7 @@ FROM (
          WHERE zoom_level = 12
            AND
              CASE WHEN transportation_filter_z12(hl.highway, hl.construction) THEN TRUE
-                  WHEN hl.highway IN ('track', 'path') THEN n.route_rank = 1
+                  WHEN hl.highway IN ('track', 'path') THEN TRUE
              END
         
          UNION ALL
@@ -414,10 +414,7 @@ FROM (
          WHERE zoom_level = 13
            AND
              CASE WHEN man_made='pier' THEN NOT ST_IsClosed(hl.geometry)
-                  WHEN hl.highway IN ('track', 'path') THEN (hl.name <> ''
-                                                       OR n.route_rank BETWEEN 1 AND 2
-                                                       OR hl.sac_scale <> ''
-                                                       )
+                  WHEN hl.highway IN ('track', 'path') THEN TRUE
                   ELSE transportation_filter_z13(hl.highway, public_transport, hl.construction, service)
              END
                     
@@ -790,8 +787,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z12
          WHERE zoom_level = 12
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
 
          -- etldoc: osm_railway_linestring_gen_z13  ->  layer_transportation:z13
@@ -825,8 +820,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z13
          WHERE zoom_level = 13
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
 
          -- etldoc: osm_railway_linestring_gen_z14  ->  layer_transportation:z14
@@ -860,8 +853,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z14
          WHERE zoom_level = 14
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
          -- etldoc: osm_railway_linestring_gen_z15  ->  layer_transportation:z15
          SELECT osm_id,
@@ -894,8 +885,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z15
          WHERE zoom_level = 15
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
          -- etldoc: osm_railway_linestring_gen_z16  ->  layer_transportation:z16
          SELECT osm_id,
@@ -928,8 +917,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z16
          WHERE zoom_level = 16
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
          -- etldoc: osm_railway_linestring_gen_z17  ->  layer_transportation:z17
          SELECT osm_id,
@@ -962,8 +949,6 @@ FROM (
                 z_order
          FROM osm_railway_linestring_gen_z17
          WHERE zoom_level = 17
-           AND railway IN ('rail', 'narrow_gauge', 'light_rail')
-           AND service = ''
          UNION ALL
 
          -- etldoc: osm_railway_linestring ->  layer_transportation:z13

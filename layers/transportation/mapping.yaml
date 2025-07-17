@@ -136,7 +136,9 @@ generalized_tables:
 
 # etldoc: osm_highway_linestring -> osm_highway_linestring_gen_z11
   highway_linestring_gen_z11:
+    # only show major roads for zoom levels <= 11
     source: highway_linestring_gen_z12
+    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway')) AND NOT is_area AND ST_IsValid(geometry)
     tolerance: ZRES11
 
   highway_linestring_gen_z12:
@@ -144,8 +146,6 @@ generalized_tables:
     tolerance: ZRES12
   highway_linestring_gen_z13:
     source: highway_linestring_gen_z14
-    # only show major roads for zoom levels <= 13
-    sql_filter: (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway') OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link', 'busway', 'bus_guideway'))
     tolerance: ZRES13
   highway_linestring_gen_z14:
     source: highway_linestring_gen_z15
