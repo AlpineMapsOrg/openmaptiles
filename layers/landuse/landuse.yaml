@@ -45,6 +45,9 @@ layer:
       - neighbourhood
       - dam
       - quarry
+      - winter_sports
+      - animal_keeping 
+      - meadow 
   datasource:
     geometry_field: geometry
     query: (SELECT geometry, class FROM layer_landuse(!bbox!, z(!scale_denominator!))) AS t

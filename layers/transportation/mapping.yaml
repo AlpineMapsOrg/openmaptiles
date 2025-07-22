@@ -272,6 +272,26 @@ expressway_field: &expressway
   key: expressway
   name: expressway
   type: bool
+trail_visibility_field: &trail_visibility
+  key: trail_visibility
+  name: trail_visibility
+  type: string
+climbing_field: &climbing
+  key: climbing
+  name: climbing
+  type: string
+climbing_grade_uiaa_field: &climbing_grade_uiaa
+  key: climbing:grade:uiaa
+  name: climbing:grade:uiaa
+  type: string
+route_field: &route
+  key: route
+  name: route
+  type: string
+route_rank_field: &route_rank
+  key: route_rank
+  name: route_rank
+  type: string
 
 tables:
 # etldoc: imposm3 -> osm_highway_linestring
@@ -322,6 +342,11 @@ tables:
     - *sac_scale
     - *surface
     - *expressway
+    - *trail_visibility
+    - *climbing
+    - *climbing_grade_uiaa
+    - *route
+    - *route_rank
     mapping:
       highway:
       - motorway

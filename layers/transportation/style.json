@@ -37,7 +37,7 @@
           "ferry"
         ]
       ],
-      "order": 24
+      "order": 2
     },
     {
       "id": "tunnel_motorway_link_casing",
@@ -115,7 +115,7 @@
           "tunnel"
         ]
       ],
-      "order": 28
+      "order": 6
     },
     {
       "id": "tunnel_service_track_casing",
@@ -165,7 +165,7 @@
           "track"
         ]
       ],
-      "order": 29
+      "order": 8
     },
     {
       "id": "tunnel_link_casing",
@@ -220,7 +220,7 @@
           0
         ]
       ],
-      "order": 30
+      "order": 10
     },
     {
       "id": "tunnel_street_casing",
@@ -282,7 +282,7 @@
           "street_limited"
         ]
       ],
-      "order": 31
+      "order": 12
     },
     {
       "id": "tunnel_tertiary_casing",
@@ -353,7 +353,7 @@
           "tertiary"
         ]
       ],
-      "order": 32
+      "order": 14
     },
     {
       "id": "tunnel_secondary_casing",
@@ -424,7 +424,7 @@
           "secondary"
         ]
       ],
-      "order": 33
+      "order": 16
     },
     {
       "id": "tunnel_trunk_casing",
@@ -497,7 +497,7 @@
           "trunk"
         ]
       ],
-      "order": 34
+      "order": 18
     },
     {
       "id": "tunnel_trunk_construction_casing",
@@ -559,7 +559,7 @@
           "trunk_construction"
         ]
       ],
-      "order": 35
+      "order": 20
     },
     {
       "id": "tunnel_primary_casing",
@@ -632,7 +632,7 @@
           "primary"
         ]
       ],
-      "order": 36
+      "order": 22
     },
     {
       "id": "tunnel_motorway_construction_casing",
@@ -692,7 +692,7 @@
           "tunnel"
         ]
       ],
-      "order": 37
+      "order": 24
     },
     {
       "id": "tunnel_motorway_casing",
@@ -752,7 +752,7 @@
           "tunnel"
         ]
       ],
-      "order": 38
+      "order": 26
     },
     {
       "id": "tunnel_path_casing_casing",
@@ -813,7 +813,7 @@
           "path"
         ]
       ],
-      "order": 39
+      "order": 28
     },
     {
       "id": "tunnel_path_casing",
@@ -874,7 +874,7 @@
           "path"
         ]
       ],
-      "order": 40
+      "order": 30
     },
     {
       "id": "tunnel_path_cycleway",
@@ -946,7 +946,7 @@
           ]
         ]
       ],
-      "order": 41
+      "order": 32
     },
     {
       "id": "tunnel_path_bridleway",
@@ -1023,7 +1023,7 @@
           "designated"
         ]
       ],
-      "order": 42
+      "order": 34
     },
     {
       "id": "tunnel_path_footway",
@@ -1098,7 +1098,7 @@
           "designated"
         ]
       ],
-      "order": 43
+      "order": 35
     },
     {
       "id": "tunnel_motorway_link",
@@ -1174,7 +1174,7 @@
           "tunnel"
         ]
       ],
-      "order": 44
+      "order": 38
     },
     {
       "id": "tunnel_service_track",
@@ -1229,7 +1229,7 @@
           "track"
         ]
       ],
-      "order": 45
+      "order": 40
     },
     {
       "id": "tunnel_service_track_construction",
@@ -1288,7 +1288,7 @@
           "track_construction"
         ]
       ],
-      "order": 46
+      "order": 42
     },
     {
       "id": "tunnel_link",
@@ -1342,7 +1342,7 @@
           0
         ]
       ],
-      "order": 47
+      "order": 44
     },
     {
       "id": "tunnel_minor",
@@ -1388,7 +1388,7 @@
           "minor"
         ]
       ],
-      "order": 48
+      "order": 45
     },
     {
       "id": "tunnel_minor_construction",
@@ -1438,7 +1438,7 @@
           "minor_construction"
         ]
       ],
-      "order": 49
+      "order": 46
     },
     {
       "id": "tunnel_tertiary",
@@ -1503,7 +1503,7 @@
           "tertiary"
         ]
       ],
-      "order": 50
+      "order": 47
     },
     {
       "id": "tunnel_tertiary_construction",
@@ -1572,7 +1572,7 @@
           "tertiary_construction"
         ]
       ],
-      "order": 51
+      "order": 49
     },
     {
       "id": "tunnel_secondary",
@@ -1650,7 +1650,7 @@
           "secondary"
         ]
       ],
-      "order": 52
+      "order": 51
     },
     {
       "id": "tunnel_secondary_construction",
@@ -5843,7 +5843,7 @@
           "bridge"
         ]
       ],
-      "order": 113
+      "order": 111
     },
     {
       "id": "bridge_service_track_casing",
@@ -5888,7 +5888,7 @@
           "track"
         ]
       ],
-      "order": 114
+      "order": 112
     },
     {
       "id": "bridge_link_casing",
@@ -5937,7 +5937,7 @@
           "bridge"
         ]
       ],
-      "order": 115
+      "order": 113
     },
     {
       "id": "bridge_street_casing",
@@ -5998,7 +5998,7 @@
           "street_limited"
         ]
       ],
-      "order": 116
+      "order": 114
     },
     {
       "id": "bridge_path_casing_casing",
@@ -6061,7 +6061,7 @@
           "path"
         ]
       ],
-      "order": 117
+      "order": 115
     },
     {
       "id": "bridge_path_casing",
@@ -6124,7 +6124,7 @@
           "path"
         ]
       ],
-      "order": 118
+      "order": 116
     },
     {
       "id": "bridge_secondary_casing",
@@ -6187,7 +6187,7 @@
           "tertiary"
         ]
       ],
-      "order": 119
+      "order": 117
     },
     {
       "id": "bridge_tertiary_casing",
@@ -6229,7 +6229,7 @@
           "tertiary"
         ]
       ],
-      "order": 120
+      "order": 118
     },
     {
       "id": "bridge_trunk_casing",
@@ -6297,7 +6297,7 @@
           "trunk"
         ]
       ],
-      "order": 121
+      "order": 119
     },
     {
       "id": "bridge_primary_casing",
@@ -6354,7 +6354,7 @@
           "primary"
         ]
       ],
-      "order": 122
+      "order": 120
     },
     {
       "id": "bridge_motorway_casing",
@@ -6404,7 +6404,7 @@
           1
         ]
       ],
-      "order": 123
+      "order": 121
     },
     {
       "id": "bridge_path_cycleway",
@@ -6476,7 +6476,7 @@
           ]
         ]
       ],
-      "order": 124
+      "order": 122
     },
     {
       "id": "bridge_path_bridleway",
@@ -6553,7 +6553,7 @@
           "designated"
         ]
       ],
-      "order": 125
+      "order": 123
     },
     {
       "id": "bridge_path_footway",
@@ -6628,7 +6628,7 @@
           "designated"
         ]
       ],
-      "order": 126
+      "order": 124
     },
     {
       "id": "bridge_motorway_link",
@@ -6693,7 +6693,7 @@
           "bridge"
         ]
       ],
-      "order": 127
+      "order": 125
     },
     {
       "id": "bridge_service_track",
@@ -6739,7 +6739,7 @@
           "track"
         ]
       ],
-      "order": 128
+      "order": 126
     },
     {
       "id": "bridge_service_track_construction",
@@ -6789,7 +6789,7 @@
           "track_construction"
         ]
       ],
-      "order": 129
+      "order": 127
     },
     {
       "id": "bridge_link",
@@ -6838,7 +6838,7 @@
           "bridge"
         ]
       ],
-      "order": 130
+      "order": 128
     },
     {
       "id": "bridge_minor",
@@ -6883,7 +6883,7 @@
           "minor"
         ]
       ],
-      "order": 131
+      "order": 129
     },
     {
       "id": "bridge_minor_construction",
@@ -6933,7 +6933,7 @@
           "minor_construction"
         ]
       ],
-      "order": 132
+      "order": 130
     },
     {
       "id": "bridge_tertiary",
@@ -6999,7 +6999,7 @@
           "tertiary"
         ]
       ],
-      "order": 133
+      "order": 131
     },
     {
       "id": "bridge_secondary",
@@ -7069,7 +7069,7 @@
           "secondary"
         ]
       ],
-      "order": 134
+      "order": 133
     },
     {
       "id": "bridge_secondary_construction-copy",
@@ -7698,7 +7698,7 @@
           "path"
         ]
       ],
-      "order": 152
+      "order": 146
     },
     {
       "id": "road_oneway",
@@ -7748,7 +7748,7 @@
           "service"
         ]
       ],
-      "order": 153
+      "order": 147
     },
     {
       "id": "road_oneway_opposite",
@@ -7799,7 +7799,7 @@
           "service"
         ]
       ],
-      "order": 154
+      "order": 148
     }
   ]
 }

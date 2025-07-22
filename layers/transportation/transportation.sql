@@ -30,6 +30,12 @@ CREATE OR REPLACE FUNCTION layer_transportation(bbox geometry, zoom_level int)
                 foot       text,
                 horse      text,
                 mtb_scale  text,
+                sac_scale  text,
+                trail_visibility    text,
+                climbing            text,
+                climbing_grade_uiaa text,
+                route               text,
+                route_rank          text,
                 surface    text
             )
 AS
@@ -70,6 +76,12 @@ SELECT osm_id,
        NULLIF(foot, '') AS foot,
        NULLIF(horse, '') AS horse,
        NULLIF(mtb_scale, '') AS mtb_scale,
+       NULLIF(sac_scale, '') AS sac_scale,
+       NULLIF(trail_visibility, '') AS trail_visibility,
+       NULLIF(climbing, '') AS climbing,
+       NULLIF(climbing_grade_uiaa, '') AS climbing_grade_uiaa,
+       NULLIF(route, '') AS route,
+       NULLIF(route_rank, '') AS route_rank,
        NULLIF(surface, '') AS surface
 FROM (
          -- etldoc: osm_transportation_merge_linestring_gen_z4 -> layer_transportation:z4
@@ -100,6 +112,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z4
          WHERE zoom_level = 4
@@ -133,6 +151,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z5
          WHERE zoom_level = 5
@@ -166,6 +190,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z6
          WHERE zoom_level = 6
@@ -199,6 +229,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z7
          WHERE zoom_level = 7
@@ -232,6 +268,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z8
          WHERE zoom_level = 8
@@ -265,6 +307,12 @@ FROM (
                 horse,
                 mtb_scale,
                 NULL AS surface,
+                NULLIF(tags->'sac_scale', '') AS sac_scale,
+                NULLIF(tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(tags->'climbing', '') AS climbing,
+                NULLIF(tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(tags->'route', '') AS route,
+                NULLIF(tags->'route_rank', '') AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z9
          WHERE zoom_level = 9
@@ -298,6 +346,12 @@ FROM (
                 horse,
                 mtb_scale,
                 NULL AS surface,
+                NULLIF(tags->'sac_scale', '') AS sac_scale,
+                NULLIF(tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(tags->'climbing', '') AS climbing,
+                NULLIF(tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(tags->'route', '') AS route,
+                NULLIF(tags->'route_rank', '') AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z10
          WHERE zoom_level = 10
@@ -331,6 +385,12 @@ FROM (
                 horse,
                 mtb_scale,
                 NULL AS surface,
+                NULLIF(tags->'sac_scale', '') AS sac_scale,
+                NULLIF(tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(tags->'climbing', '') AS climbing,
+                NULLIF(tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(tags->'route', '') AS route,
+                NULLIF(tags->'route_rank', '') AS route_rank,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z11
          WHERE zoom_level = 11
@@ -368,6 +428,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z12 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -408,6 +474,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z13 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -450,6 +522,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z14 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -489,6 +567,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z15 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -526,6 +610,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z16 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -563,6 +653,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring_gen_z17 hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -603,6 +699,12 @@ FROM (
                 horse,
                 mtb_scale,
                 surface_value(COALESCE(NULLIF(surface, ''), tracktype)) AS "surface",
+                NULLIF(hl.tags->'sac_scale', '') AS sac_scale,
+                NULLIF(hl.tags->'trail_visibility', '') AS trail_visibility,
+                NULLIF(hl.tags->'climbing', '') AS climbing,
+                NULLIF(hl.tags->'climbing:grade:uiaa', '') AS climbing_grade_uiaa,
+                NULLIF(hl.tags->'route', '') AS route,
+                NULLIF(hl.tags->'route_rank', '') AS route_rank,
                 hl.z_order
          FROM osm_highway_linestring hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -642,6 +744,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z8
          WHERE zoom_level = 8
@@ -678,6 +786,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z9
          WHERE zoom_level = 9
@@ -714,6 +828,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z10
          WHERE zoom_level = 10
@@ -749,6 +869,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z11
          WHERE zoom_level = 11
@@ -784,6 +910,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -817,6 +949,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z13
          WHERE zoom_level = 13
@@ -850,6 +988,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z14
          WHERE zoom_level = 14
@@ -882,6 +1026,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z15
          WHERE zoom_level = 15
@@ -914,6 +1064,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z16
          WHERE zoom_level = 16
@@ -946,6 +1102,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring_gen_z17
          WHERE zoom_level = 17
@@ -980,6 +1142,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_railway_linestring
            WHERE zoom_level >= 17
@@ -1013,6 +1181,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -1046,6 +1220,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z13
          WHERE zoom_level = 13
@@ -1078,6 +1258,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z14
          WHERE zoom_level = 14
@@ -1110,6 +1296,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z15
          WHERE zoom_level = 15
@@ -1142,6 +1334,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z16
          WHERE zoom_level = 16
@@ -1174,6 +1372,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring_gen_z17
          WHERE zoom_level = 17
@@ -1208,6 +1412,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_aerialway_linestring
          WHERE zoom_level >= 17
@@ -1241,6 +1451,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z4
          WHERE zoom_level = 4
@@ -1274,6 +1490,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z5
          WHERE zoom_level = 5
@@ -1307,6 +1529,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z6
          WHERE zoom_level = 6
@@ -1340,6 +1568,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z7
          WHERE zoom_level = 7
@@ -1373,6 +1607,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z8
          WHERE zoom_level = 8
@@ -1406,6 +1646,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z9
          WHERE zoom_level = 9
@@ -1439,6 +1685,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z10
          WHERE zoom_level = 10
@@ -1472,6 +1724,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z11
          WHERE zoom_level = 11
@@ -1505,6 +1763,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -1538,6 +1802,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z13
          WHERE zoom_level = 13
@@ -1570,6 +1840,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z14
          WHERE zoom_level = 14
@@ -1602,6 +1878,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z15
          WHERE zoom_level = 15
@@ -1634,6 +1916,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z16
          WHERE zoom_level = 16
@@ -1666,6 +1954,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring_gen_z17
          WHERE zoom_level = 17
@@ -1700,6 +1994,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_shipway_linestring
          WHERE zoom_level >= 17
@@ -1741,6 +2041,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_linestring_gen_z13
               -- We do not want underground pedestrian areas for now
@@ -1782,6 +2088,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_linestring_gen_z14
               -- We do not want underground pedestrian areas for now
@@ -1822,6 +2134,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_linestring_gen_z15
               -- We do not want underground pedestrian areas for now
@@ -1862,6 +2180,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_linestring_gen_z16
               -- We do not want underground pedestrian areas for now
@@ -1902,6 +2226,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_linestring_gen_z17
               -- We do not want underground pedestrian areas for now
@@ -1945,6 +2275,12 @@ FROM (
                 NULL AS horse,
                 NULL AS mtb_scale,
                 NULL AS surface,
+                NULL AS sac_scale,
+                NULL AS trail_visibility,
+                NULL AS climbing,
+                NULL AS climbing_grade_uiaa,
+                NULL AS route,
+                NULL AS route_rank,
                 z_order
          FROM osm_highway_polygon
               -- We do not want underground pedestrian areas for now

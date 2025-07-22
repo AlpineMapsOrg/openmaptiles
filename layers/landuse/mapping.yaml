@@ -98,6 +98,9 @@ tables:
       - industrial
       - garages
       - retail
+      - winter_sport
+      - animal_keeping 
+      - meadow 
       amenity:
       - bus_station
       - school
