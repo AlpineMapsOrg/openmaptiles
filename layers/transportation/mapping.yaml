@@ -146,6 +146,7 @@ generalized_tables:
     tolerance: ZRES12
   highway_linestring_gen_z13:
     source: highway_linestring_gen_z14
+    sql_filter: (highway NOT IN ('footway') OR highway = 'construction' AND construction IN ('footway'))
     tolerance: ZRES13
   highway_linestring_gen_z14:
     source: highway_linestring_gen_z15
